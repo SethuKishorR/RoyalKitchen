@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         id="WebApp_ID" version="4.0">
+
+    <!-- 
+    The display-name element provides a short name for the web application.
+    This name is used in administrative tools and logs.
+    -->
+    <display-name>RoyalKitchen</display-name>
+
+    <!-- 
+    The welcome-file-list element specifies the default file to be served
+    when a directory is accessed. 
+    In this case, if a user navigates to the root of the application, 
+    the server will return the index.html file.
+    -->
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>
