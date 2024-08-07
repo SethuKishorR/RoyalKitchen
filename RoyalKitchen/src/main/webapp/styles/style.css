@@ -1,0 +1,138 @@
+@charset "UTF-8";
+
+/**
+ * Import Color Variables
+ * <p>
+ * This statement imports the color variables defined in the 'colors.css' file. 
+ * These variables are used throughout the stylesheet to ensure consistent color usage 
+ * and facilitate easy updates to the color scheme.
+ * </p>
+ */
+@import url('colors.css');
+
+/**
+ * Global Styles
+ * <p>
+ * Sets basic styling for the body and html elements, including full height, zero margin, 
+ * and a custom font family.
+ * </p>
+ */
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: 'Poiret One', cursive;
+}
+
+/**
+ * Background and Glass Effect
+ * <p>
+ * Styles for the background image and glass effect container. The background is set 
+ * to cover the entire viewport, and the glass effect uses a backdrop filter to create 
+ * a frosted glass appearance with a shadow for depth.
+ * </p>
+ */
+.bg {
+	background-image: url('images/backgroundWall.jpg');
+	height: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.glass-effect {
+	background: var(--rgba-light); /* Use variable for rgba background */
+	border-radius: 15px;
+	padding: 20px;
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+	/* Enhanced shadow effect */
+}
+
+/**
+ * Form Control Styles
+ * <p>
+ * Styles for form controls including border colors and focus states. Utilizes primary 
+ * color variables for consistent theming.
+ * </p>
+ */
+.form-control {
+	border-color: var(--color-primary);
+}
+
+.form-control:focus {
+	border-color: var(--color-primary);
+	box-shadow: 0 0 0 0.2rem var(--rgba-primary);
+	/* Use variable for rgba shadow */
+}
+
+/**
+ * Button Styles
+ * <p>
+ * Defines styles for buttons, including default and hover states. Uses primary colors 
+ * and adjusts padding, border radius, and background color on hover.
+ * </p>
+ */
+button {
+	background-color: var(--color-primary);
+	border: none;
+	color: #fff;
+	padding: 10px 20px;
+	border-radius: 5px;
+}
+
+button:hover {
+	background-color: var(--color-muted);
+}
+
+/**
+ * Danger Button Styles
+ * <p>
+ * Styles for buttons with the 'btn-danger' class, including default and hover states.
+ * </p>
+ */
+.btn-danger {
+	background-color: var(--color-primary);
+	border: none;
+}
+
+.btn-danger:hover {
+	background-color: var(--color-hover);
+}
+
+/**
+ * Sign Link Styles
+ * <p>
+ * Styles for sign-up and sign-in links, including default and hover states. Links 
+ * are styled to match the primary color with bold text and underline on hover.
+ * </p>
+ */
+.sign-link {
+	color: var(--color-primary);
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.sign-link:hover {
+	color: var(--color-primary);
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+/**
+ * Button Focus Styles
+ * <p>
+ * Removes the default box shadow on button focus to prevent 
+ * the default outline appearance and ensure a clean, consistent look.
+ * </p>
+ */
+button:focus {
+	box-shadow: none !important;
+}
+
+a:focus {
+	box-shadow: none !important;
+}

@@ -1,0 +1,131 @@
+@charset "UTF-8";
+
+/**
+ * Import Color Variables
+ * <p>
+ * This statement imports the color variables defined in the 'colors.css' file. 
+ * These variables are used throughout the stylesheet to ensure consistent color usage 
+ * and facilitate easy updates to the color scheme.
+ * </p>
+ */
+@import url('colors.css');
+
+/**
+ * Navbar Styles
+ * <p>
+ * This section defines the styling for the fixed navbar, including its background color, 
+ * shadow, padding, and text color. It also specifies the appearance of navigation links, 
+ * buttons, and dropdown menus within the navbar.
+ * </p>
+ */
+.navbar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 1050;
+	background-color: var(--color-background);
+	box-shadow: 0 4px 8px var(--rgba-shadow-light);
+	padding: 20px 0px;
+}
+
+.navbar-brand {
+	color: var(--color-primary) !important;
+}
+
+.navbar-nav .nav-link {
+	color: var(--color-primary) !important;
+	font-weight: 500 !important;
+	padding: 0.5rem 1rem;
+	line-height: 1.5;
+}
+
+.navbar-nav .nav-link:hover {
+	color: var(--color-hover) !important;
+}
+
+.navbar-nav .nav-item .btn-outline-primary {
+	color: var(--color-primary) !important;
+	border-color: var(--color-primary) !important;
+	border-radius: 5px;
+	font-size: 0.875rem;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	padding: 0.375rem 0.75rem;
+	box-shadow: 0 2px 4px var(--rgba-shadow-light);
+}
+
+.navbar-nav .nav-item .btn-outline-primary .fas {
+	margin-right: 0.5rem;
+}
+
+.navbar-nav .nav-item .btn-outline-primary:hover {
+	color: white !important;
+	border-color: var(--color-primary) !important;
+	background-color: var(--color-primary) !important;
+}
+
+.navbar-nav .nav-item {
+	margin: 0 0.5rem;
+}
+
+.dropdown-menu {
+	border-radius: 0;
+	box-shadow: 0 4px 8px var(--rgba-shadow-light);
+	padding: 0;
+	width: 300px;
+}
+
+.dropdown-menu .form-control {
+	width: calc(100% - 2.5rem);
+	height: 40px;
+	border-color: var(--color-primary) !important;
+}
+
+.dropdown-menu .outline-primary {
+	width: 15%;
+	height: 40px;
+	border-radius: 3px;
+	font-size: 0.875rem;
+	background-color: var(--color-primary) !important;
+	color: white !important;
+	border-color: var(--color-primary) !important;
+}
+
+.dropdown-menu .outline-primary:hover {
+	background-color: var(--color-dark) !important;
+	color: white !important;
+	border-color: var(--color-hover) !important;
+}
+
+.dropdown-menu .form-control::placeholder {
+	color: var(--color-secondary);
+	opacity: 1;
+}
+
+.dropdown-menu.custom-menu {
+	padding: 10px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px var(--rgba-shadow-light);
+	cursor: pointer;
+}
+
+.dropdown-menu.custom-menu .dropdown-item {
+	padding: 10px 20px;
+	border-radius: 4px;
+}
+
+.dropdown-menu.custom-menu .dropdown-item:active {
+	background-color: var(--color-light-gray);
+}
+
+/**
+ * Modal Content
+ * <p>
+ * This section styles the modal content with rounded corners to match the design scheme.
+ * </p>
+ */
+.modal-content {
+	border-radius: 0.5rem;
+}

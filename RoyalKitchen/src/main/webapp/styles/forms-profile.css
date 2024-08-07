@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+/**
+ * Import Color Variables
+ * <p>
+ * This statement imports the color variables defined in the 'colors.css' file. 
+ * These variables are used throughout the stylesheet to ensure consistent color usage 
+ * and facilitate easy updates to the color scheme.
+ * </p>
+ */
+@import url('colors.css');
+
+/**
+ * Form Control Styles
+ * <p>
+ * Applies background colors to form fields based on their state (enabled or disabled). 
+ * Ensures a light background color for editable fields and a transparent background 
+ * with a not-allowed cursor for disabled fields.
+ * </p>
+ */
+.field-editable:enabled {
+	background-color: var(--color-background);
+}
+
+.field-editable:disabled {
+	background-color: transparent;
+	cursor: not-allowed;
+}
+
+/**
+ * Profile and Button Hover Styles
+ * <p>
+ * Defines hover styles for profile-related elements and buttons. 
+ * Changes background color and text color on hover to provide visual feedback.
+ * </p>
+ */
+#profileDetails:hover {
+	background-color: var(--color-light-green-hover);
+	color: var(--color-dark-text);
+}
+
+#updateProfile:hover {
+	background-color: var(--color-light-blue);
+	color: var(--color-dark-text);
+}
+
+#deleteProfile:hover {
+	background-color: var(--color-light-coral);
+	color: var(--color-dark-text);
+}
+
+/**
+ * Edit Button Styles
+ * <p>
+ * Styles the edit button with a warning class. Uses primary colors for the button and hover state.
+ * </p>
+ */
+.btn-warning.edit-btn {
+	background-color: var(--color-tertiary);
+	border-color: var(--color-tertiary);
+	color: #fff;
+}
+
+.btn-warning.edit-btn:hover {
+	background-color: var(--color-accent);
+	border-color: var(--color-accent);
+}
+
+/**
+ * Modal Backdrop Styles
+ * <p>
+ * Applies a blur effect and a background color with opacity to the modal backdrop 
+ * to enhance visual focus on the modal content.
+ * </p>
+ */
+.modal-backdrop.show {
+	backdrop-filter: blur(8px);
+	background-color: var(--rgba-black-full);
+}
+
+/**
+ * Button Focus Styles
+ * <p>
+ * Removes the default box shadow on button focus to prevent 
+ * the default outline appearance and ensure a clean, consistent look.
+ * </p>
+ */
+button:focus {
+	box-shadow: none !important;
+}

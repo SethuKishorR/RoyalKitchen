@@ -3,25 +3,46 @@ package com.tapfoods.model;
 /**
  * The User class represents a user entity with attributes such as user ID, 
  * username, email, phone number, password, and address.
+ * <p>
+ * This class includes methods for getting and setting user attributes, 
+ * as well as validating user input.
+ * </p>
  */
 public class User {
 	private int userid;
 	private String username;
 	private String email;
 	private String phonenumber;
-	private String password;
 	private String address;
+	private String password;
 
 	/**
 	 * Default constructor.
+	 * <p>
+	 * This constructor initializes a new User object with default values.
+	 * </p>
 	 */
 	public User() {
 		super();
 	}
 
 	/**
-	 * Parameterized constructor.
+	 * Constructor with email and password.
+	 * <p>
+	 * This constructor initializes the User object with the specified email and password.
+	 * </p>
 	 * 
+	 * @param email the email address
+	 * @param password the password
+	 */
+	public User(String email, String password) {
+		super();
+		this.email = email;
+		this.password = password;
+	}
+
+	/**
+	 * Parameterized constructor.
 	 * <p>
 	 * This constructor initializes the User object with the specified values.
 	 * </p>
@@ -30,22 +51,21 @@ public class User {
 	 * @param username the username
 	 * @param email the email address
 	 * @param phonenumber the phone number
-	 * @param password the password
 	 * @param address the address
+	 * @param password the password
 	 */
-	public User(int userid, String username, String email, String phonenumber, String password, String address) {
+	public User(int userid, String username, String email, String phonenumber, String address, String password) {
 		super();
 		this.userid = userid;
 		this.username = username;
 		this.email = email;
 		this.phonenumber = phonenumber;
-		this.password = password;
 		this.address = address;
+		this.password = password;
 	}
 
 	/**
 	 * Parameterized constructor without user ID.
-	 * 
 	 * <p>
 	 * This constructor initializes the User object with the specified values, except for the user ID.
 	 * </p>
@@ -53,21 +73,22 @@ public class User {
 	 * @param username the username
 	 * @param email the email address
 	 * @param phonenumber the phone number
-	 * @param password the password
 	 * @param address the address
+	 * @param password the password
 	 */
-	public User(String username, String email, String phonenumber, String password, String address) {
+	public User(String username, String email, String phonenumber, String address, String password) {
 		super();
 		this.username = username;
 		this.email = email;
 		this.phonenumber = phonenumber;
-		this.password = password;
 		this.address = address;
+		this.password = password;
 	}
+
+	// Getters and setters...
 
 	/**
 	 * Gets the user ID.
-	 * 
 	 * <p>
 	 * This method returns the unique identifier for the user.
 	 * </p>
@@ -80,7 +101,6 @@ public class User {
 
 	/**
 	 * Sets the user ID.
-	 * 
 	 * <p>
 	 * This method sets the unique identifier for the user.
 	 * </p>
@@ -93,7 +113,6 @@ public class User {
 
 	/**
 	 * Gets the username.
-	 * 
 	 * <p>
 	 * This method returns the username of the user.
 	 * </p>
@@ -106,7 +125,6 @@ public class User {
 
 	/**
 	 * Sets the username.
-	 * 
 	 * <p>
 	 * This method sets the username of the user.
 	 * </p>
@@ -119,7 +137,6 @@ public class User {
 
 	/**
 	 * Gets the email address.
-	 * 
 	 * <p>
 	 * This method returns the email address of the user.
 	 * </p>
@@ -132,7 +149,6 @@ public class User {
 
 	/**
 	 * Sets the email address.
-	 * 
 	 * <p>
 	 * This method sets the email address of the user.
 	 * </p>
@@ -145,7 +161,6 @@ public class User {
 
 	/**
 	 * Gets the phone number.
-	 * 
 	 * <p>
 	 * This method returns the phone number of the user.
 	 * </p>
@@ -158,7 +173,6 @@ public class User {
 
 	/**
 	 * Sets the phone number.
-	 * 
 	 * <p>
 	 * This method sets the phone number of the user.
 	 * </p>
@@ -171,7 +185,6 @@ public class User {
 
 	/**
 	 * Gets the password.
-	 * 
 	 * <p>
 	 * This method returns the password of the user.
 	 * </p>
@@ -184,7 +197,6 @@ public class User {
 
 	/**
 	 * Sets the password.
-	 * 
 	 * <p>
 	 * This method sets the password of the user.
 	 * </p>
@@ -197,7 +209,6 @@ public class User {
 
 	/**
 	 * Gets the address.
-	 * 
 	 * <p>
 	 * This method returns the address of the user.
 	 * </p>
@@ -210,7 +221,6 @@ public class User {
 
 	/**
 	 * Sets the address.
-	 * 
 	 * <p>
 	 * This method sets the address of the user.
 	 * </p>
@@ -222,8 +232,23 @@ public class User {
 	}
 
 	/**
-	 * Returns a string representation of the user object.
+	 * Validates user input.
+	 * <p>
+	 * This method performs basic validation checks on user attributes.
+	 * </p>
 	 * 
+	 * @return {@code true} if all attributes are valid, {@code false} otherwise
+	 */
+	public boolean isValid() {
+		return username != null && !username.trim().isEmpty()
+				&& email != null && email.contains("@")
+				&& phonenumber != null && phonenumber.matches("\\d+")
+				&& address != null && !address.trim().isEmpty()
+				&& password != null && password.length() >= 6;
+	}
+
+	/**
+	 * Returns a string representation of the user object.
 	 * <p>
 	 * This method provides a string representation of the User object, including its attributes.
 	 * </p>
@@ -233,6 +258,6 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [userid=" + userid + ", username=" + username + ", email=" + email + ", phonenumber=" + phonenumber
-				+ ", password=" + password + ", address=" + address + "]";
+				+ ", address=" + address + ", password=" + password + "]";
 	}
 }

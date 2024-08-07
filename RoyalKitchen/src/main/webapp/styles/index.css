@@ -1,0 +1,98 @@
+@charset "UTF-8";
+
+/**
+ * Import Color Variables
+ * <p>
+ * This statement imports the color variables defined in the 'colors.css' file. 
+ * These variables are used throughout the stylesheet to ensure consistent color usage 
+ * and facilitate easy updates to the color scheme.
+ * </p>
+ */
+@import url('colors.css');
+
+/**
+ * Global Styles
+ * <p>
+ * Sets the height, margin, and font for the entire page. Ensures that the page is centered 
+ * both vertically and horizontally, and applies the background color from the color palette.
+ * </p>
+ */
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: 'Poiret One', cursive;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--color-background);
+	/* Use variable for background color */
+}
+
+/**
+ * Container Styles
+ * <p>
+ * Centers the text inside the container. This class is used to align text in the center 
+ * of the page or container element.
+ * </p>
+ */
+.container {
+	text-align: center;
+}
+
+/**
+ * Title Styles
+ * <p>
+ * Defines the size, weight, and color of the title text. Adds margin to the bottom of the title 
+ * to create space between it and subsequent elements.
+ * </p>
+ */
+.title {
+	font-size: 4rem;
+	font-weight: bold;
+	color: var(--color-primary); /* Use variable for primary color */
+	margin-bottom: 30px;
+}
+
+/**
+ * Button Styles
+ * <p>
+ * Styles the button with a background color and text color from the color palette. 
+ * Ensures that the text decoration is removed. Adds margin to create spacing around the button.
+ * </p>
+ */
+.btn {
+	margin: 10px;
+	background-color: var(--color-primary);
+	/* Use variable for button background color */
+	color: white;
+	text-decoration: none;
+}
+
+/**
+ * Button Hover Styles
+ * <p>
+ * Changes the button's background color when hovered over to provide visual feedback. 
+ * The color is defined in the color palette.
+ * </p>
+ */
+.btn:hover {
+	background-color: var(--color-hover);
+	/* Use variable for button hover color */
+	color: white;
+	text-decoration: none;
+}
+
+/**
+ * Button Focus Styles
+ * <p>
+ * Removes the default box shadow on button focus to prevent 
+ * the default outline appearance and ensure a clean, consistent look.
+ * </p>
+ */
+button:focus {
+	box-shadow: none !important;
+}
+
+a:focus {
+	box-shadow: none !important;
+}

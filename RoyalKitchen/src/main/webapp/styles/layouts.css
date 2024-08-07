@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+/**
+ * Import Color Variables
+ * <p>
+ * This statement imports the color variables defined in the 'colors.css' file. 
+ * These variables are used throughout the stylesheet to ensure consistent color usage 
+ * and facilitate easy updates to the color scheme.
+ * </p>
+ */
+@import url('colors.css');
+
+/**
+ * Reset default margin and padding for all elements
+ * <p>
+ * This rule sets margin and padding to zero for all elements to ensure a consistent layout
+ * and remove browser default styling.
+ * </p>
+ */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+/**
+ * Basic Layout Styles
+ * <p>
+ * Sets the height to 100% for the body and html elements and applies the 'Poiret One' font-family
+ * to ensure consistent styling across the entire page.
+ * </p>
+ */
+body, html {
+	height: 100%;
+	margin: 0;
+	font-family: 'Poiret One', cursive;
+}
+
+/**
+ * Background Color for Body
+ * <p>
+ * Applies a light background color to the body element using the color variable from 'colors.css'.
+ * </p>
+ */
+body {
+	background-color: var(--color-light);
+}
+
+/**
+ * Focus Style for Form Controls
+ * <p>
+ * Removes the default box-shadow on form controls when they are focused to achieve a cleaner appearance.
+ * </p>
+ */
+.form-control:focus {
+	box-shadow: none;
+}
+
+/**
+ * Button Outline Primary Styles
+ * <p>
+ * Removes default border and outline from buttons with the 'btn-outline-primary' class. 
+ * Ensures border color on hover matches the primary color defined in 'colors.css'.
+ * </p>
+ */
+.btn-outline-primary {
+	border: none;
+	outline: none;
+}
+
+.btn-outline-primary:hover {
+	border-color: var(--color-primary) !important;
+}
+
+/**
+ * Media Query for Small Devices
+ * <p>
+ * Applies specific styles for devices with a maximum width of 991.98px. Adds a shadow and 
+ * adjusts spacing for navbar items and form elements.
+ * </p>
+ */
+@media ( max-width : 991.98px) {
+	.navbar-nav .nav-item {
+		box-shadow: 0 2px 4px var(--rgba-dark);
+		margin-bottom: 0.5rem;
+		padding: 10px 0px;
+	}
+	form.d-flex {
+		border: 1px solid var(--color-primary);
+		outline: none;
+	}
+}
