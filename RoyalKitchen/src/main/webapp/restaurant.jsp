@@ -1,6 +1,8 @@
-<%@ include file="navbar.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ include file="navbar.jsp"%>
+<%@ page import="com.tapfoods.model.User"%>
+
 <%
 /**
  * <p>This code block retrieves the user object from the session. If the user is not authenticated or their email is not set, 
@@ -8,13 +10,25 @@
  * 
  * <p>The check ensures that the user is logged in and has a valid email address before allowing access to the current page. 
  * If the user is not authenticated, they are redirected to the sign-in page to log in.</p>
+ * 
+ * <p>The cache control headers are set to prevent caching of the redirection page. This ensures that the browser or any 
+ * intermediary caches do not store the redirected page and always fetches the latest version when the user is redirected 
+ * to the sign-in page.</p>
  */
 user = (User) session.getAttribute("user");
 if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
+	// Ensure proper cache control for redirected pages
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", 0); // Proxies
+
+	// Redirect to sign-in page
 	response.sendRedirect("signIn.jsp");
+	// Ensure no further content is processed
 	return;
 }
 %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,7 +68,7 @@ if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
     Link to the custom stylesheet
     <p>Includes custom styles</p>
     -->
-<link rel="stylesheet" href="">
+<link rel="stylesheet" href="path/to/your/custom.css">
 
 <!--
     Inline CSS for basic styling
@@ -72,7 +86,6 @@ html, body {
 </style>
 </head>
 <body>
-
 	<!--
     Main content container
     <p>Centers the content vertically and horizontally in the viewport</p>
