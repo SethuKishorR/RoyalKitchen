@@ -32,7 +32,18 @@ body, html {
  * </p>
  */
 .bg {
-	background-image: url('images/backgroundWall.jpg');
+	background-image: url('images/userbg.jpg');
+	height: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.admin {
+	background-image: url('images/adminbg.jpg');
 	height: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -43,13 +54,12 @@ body, html {
 }
 
 .glass-effect {
-	background: var(--rgba-light); /* Use variable for rgba background */
-	border-radius: 15px;
-	padding: 20px;
-	backdrop-filter: blur(10px);
-	-webkit-backdrop-filter: blur(10px);
-	box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-	/* Enhanced shadow effect */
+    background: rgba(255, 255, 255, 0.2); /* Light background with opacity for dimming */
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4); /* Enhanced shadow effect */
+    background-color: rgba(0, 0, 0, 0.5); /* Darker background for dimming effect */
+    color: white; /* Ensures text is readable on the dark background */
 }
 
 /**
@@ -60,11 +70,11 @@ body, html {
  * </p>
  */
 .form-control {
-	border-color: var(--color-primary);
+	border-color: var(--color-light-gray);
 }
 
 .form-control:focus {
-	border-color: var(--color-primary);
+	border-color: var(--color-light-gray);
 	box-shadow: 0 0 0 0.2rem var(--rgba-primary);
 	/* Use variable for rgba shadow */
 }
@@ -135,4 +145,12 @@ button:focus {
 
 a:focus {
 	box-shadow: none !important;
+}
+
+@media ( min-width : 992px) {
+	/* Bootstrap's lg breakpoint starts at 992px */
+	.custom-styles {
+		margin-left: 1rem; /* Adjust to your desired value */
+		box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+	}
 }

@@ -18,7 +18,7 @@
     Favicon link
     <p>Specifies the icon to be used in the browser tab and bookmarks</p>
     -->
-<link rel="icon" href="styles/images/favicon.png" type="image/png">
+<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
 
 <!--
     The title of the document
@@ -38,7 +38,7 @@
     Link to the custom stylesheet
     <p>Includes custom styles</p>
     -->
-<link rel="stylesheet" href="styles/style.css">
+<link rel="stylesheet" href="admin/styles/style.css">
 </head>
 <body>
 	<!--
@@ -59,21 +59,26 @@
                 Success message display
                 <p>Shows the success message passed from the server</p>
                 -->
-				<div class="alert alert-danger text-center">
+				<div class="alert alert-success text-center"
+					style="max-width: 100%; word-wrap: break-word; overflow-wrap: break-word;">
 					<%
 					String message = (String) request.getAttribute("message");
 					if (message != null) {
 						out.print(message);
+					} else {
+						out.print("Session expired. Please click 'Back' to sign in again.");
 					}
 					%>
 				</div>
+
 
 				<!--
                 Back button
                 <p>Provides a link to redirect the user to the specified URL</p>
                 -->
 				<p class="text-center mt-3">
-					<a href="<%=request.getAttribute("redirectUrl")%>"
+					<a
+						href="<%=request.getAttribute("redirectUrl") != null ? request.getAttribute("redirectUrl") : "signIn.jsp"%>"
 						class="btn btn-danger">Back</a>
 				</p>
 			</div>

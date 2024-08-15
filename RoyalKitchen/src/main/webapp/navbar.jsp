@@ -15,17 +15,18 @@
  * to the sign-in page.</p>
  */
 User user = (User) session.getAttribute("user");
-if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
+/**	
+ 	if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
 	// Ensure proper cache control for redirected pages
 	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
 	response.setDateHeader("Expires", 0); // Proxies
-
 	// Redirect to sign-in page
 	response.sendRedirect("signIn.jsp");
 	// Ensure no further content is processed
 	return;
 }
+*/
 %>
 
 <!DOCTYPE html>
@@ -34,7 +35,10 @@ if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="styles/images/favicon.png" type="image/png">
+<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+	rel="stylesheet">
 
 <!--
 <p>This section includes the necessary stylesheets and external resources required for the page.</p>
@@ -53,6 +57,9 @@ and form-specific styles.</p>
 </ul>
 -->
 <link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -60,9 +67,9 @@ and form-specific styles.</p>
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
 	rel="stylesheet">
-<link rel="stylesheet" href="styles/layouts.css">
-<link rel="stylesheet" href="styles/components.css">
-<link rel="stylesheet" href="styles/forms-profile.css">
+<link rel="stylesheet" href="admin/styles/layouts.css">
+<link rel="stylesheet" href="admin/styles/components.css">
+<link rel="stylesheet" href="admin/styles/forms-profile.css">
 </head>
 
 <body>
@@ -86,7 +93,7 @@ and form-specific styles.</p>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 		<div class="container-fluid">
 			<a class="navbar-brand ms-4" href="#"> <img
-				src="styles/images/logo.png" alt="" width="30" height="28"
+				src="admin/styles/images/logo.png" alt="" width="30" height="28"
 				class="d-inline-block align-text-top"> RoyalKitchen
 			</a>
 			<button class="navbar-toggler" type="button"
@@ -102,7 +109,8 @@ and form-specific styles.</p>
 						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
 						role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							Search </a>
-						<ul class="dropdown-menu mt-lg-4" aria-labelledby="navbarDropdown">
+						<ul class="dropdown-menu dropdown-menu-center mt-lg-4"
+							aria-labelledby="navbarDropdown">
 							<li>
 								<form class="d-flex p-2">
 									<input class="form-control me-2" type="search"
@@ -114,11 +122,14 @@ and form-specific styles.</p>
 								</form>
 							</li>
 						</ul></li>
+					<%
+					if (user != null) {
+					%>
 					<li class="nav-item dropdown"><a
 						class="nav-link dropdown-toggle" href="#" id="profileDropdown"
 						role="button" data-bs-toggle="dropdown" aria-expanded="true">
 							Profile </a>
-						<ul class="dropdown-menu custom-menu mt-lg-4"
+						<ul class="dropdown-menu dropdown-menu-center custom-menu mt-lg-4"
 							aria-labelledby="profileDropdown">
 							<li class="dropdown-item" id="profileDetails"
 								data-bs-toggle="modal" data-bs-target="#profileModal">Profile
@@ -130,10 +141,25 @@ and form-specific styles.</p>
 								data-bs-toggle="modal" data-bs-target="#deleteModal">Delete
 								Profile</li>
 						</ul></li>
+					<%
+					}
+					%>
 					<li class="nav-item"><a class="nav-link" href="#">Offers</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">Reviews</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">Help</a></li>
 					<li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+					<%
+					if (user == null) {
+					%>
+					<li class="nav-item"><a
+						class="nav-link btn btn-outline-danger" href="signIn.jsp"
+						style="padding: 5px; color: #dc3545; background-color: transparent;"
+						onmouseover="this.style.setProperty('color', '#fff', 'important'); this.style.setProperty('background-color', '#dc3545', 'important');"
+						onmouseout="this.style.setProperty('color', '#dc3545', 'important'); this.style.setProperty('background-color', 'transparent', 'important');">
+							Sign In </a></li>
+					<%
+					}
+					%>
 				</ul>
 			</div>
 		</div>
@@ -145,27 +171,14 @@ and form-specific styles.</p>
 		<div class="modal-dialog modal-lg modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<!--
-                <p>This section defines the header of the modal. It includes the title "Profile Details" and a close button 
-                to dismiss the modal.</p>
-                -->
 					<h5 class="modal-title" id="profileModalLabel">Profile Details</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+						aria-label="Close"
+						style="background-color: transparent; border: none;"
+						onmouseover="this.style.backgroundColor='lightcoral';"
+						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
-				<div class="modal-body">
-					<!--
-                <p>This section contains the body of the modal, which displays user profile details in a table format. If no 
-                user information is found, a message is shown indicating that no user details are available.</p>
-                -->
-					<%
-					user = (User) session.getAttribute("user");
-					if (user != null) {
-						if (user.getEmail() == null || user.getEmail().isEmpty()) {
-							// If email is missing, show an alert
-							out.print("<script>alert('User email is missing. Please log in again.');</script>");
-						}
-					%>
+				<div class="modal-body custom-scroll">
 					<table class="table table-striped">
 						<thead>
 							<tr>
@@ -176,56 +189,72 @@ and form-specific styles.</p>
 						<tbody>
 							<tr>
 								<td>User ID</td>
-								<td><%=user.getUserid()%></td>
+								<td><input type="text" id="profileUserId"
+									value="<%=user != null ? user.getUserid() : ""%>"
+									class="form-control field-editable" disabled
+									style="border: 1px solid lightgray;"></td>
 							</tr>
 							<tr>
 								<td>Email</td>
-								<td><%=user.getEmail()%></td>
+								<td><input type="text" id="profileEmail"
+									value="<%=user != null ? user.getEmail() : ""%>"
+									class="form-control field-editable" disabled
+									style="border: 1px solid lightgray;"></td>
 							</tr>
 							<tr>
 								<td>Username</td>
-								<td><%=user.getUsername()%></td>
+								<td><input type="text" id="profileUsername"
+									value="<%=user != null ? user.getUsername() : ""%>"
+									class="form-control field-editable" disabled
+									style="border: 1px solid lightgray;"></td>
 							</tr>
 							<tr>
 								<td>Phone Number</td>
-								<td><%=user.getPhonenumber()%></td>
+								<td><input type="text" id="profilePhoneNumber"
+									value="<%=user != null ? user.getPhonenumber() : ""%>"
+									class="form-control field-editable" disabled
+									style="border: 1px solid lightgray;"></td>
 							</tr>
 							<tr>
 								<td>Address</td>
-								<td><%=user.getAddress()%></td>
+								<td><input type="text" id="profileAddress"
+									value="<%=user != null ? user.getAddress() : ""%>"
+									class="form-control field-editable" disabled
+									style="border: 1px solid lightgray;"></td>
 							</tr>
 							<tr>
 								<td>Password</td>
-								<td>*****</td>
+								<td>
+									<div class="input-group">
+										<input type="password" id="profilePassword"
+											value="<%=user != null ? user.getPassword() : ""%>"
+											class="form-control field-editable" disabled
+											style="border: 1px solid lightgray;">
+										<div class="input-group-append" style="border-radius: 10px;">
+											<span class="input-group-text" id="toggle-profile-password"
+												data-toggle="password" data-target="profilePassword"
+												style="height: 38px; line-height: 38px; background-color: white;">
+												<i class="fas fa-eye" id="profilePasswordEye"></i>
+											</span>
+										</div>
+									</div>
+								</td>
 							</tr>
 						</tbody>
 					</table>
-					<%
-					} else {
-					%>
-					<p>No user details available.</p>
-					<%
-					}
-					%>
-					<!--
-                <p>This section includes a form for logging out. The form is styled to be displayed inline, and when submitted, 
-                it triggers the logout process.</p>
-                -->
 					<form action="navbar.jsp" method="post" style="display: inline;">
 						<input type="hidden" name="logout" value="true">
 						<button type="submit" class="btn btn-warning">Logout</button>
 					</form>
 				</div>
 				<div class="modal-footer">
-					<!--
-                <p>This section defines the footer of the modal, including a button to close the modal.</p>
-                -->
 					<button type="button" class="btn btn-danger"
 						data-bs-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
 	</div>
+
 	<%
 	/**
 	 * This section handles the logout process and controls caching behavior.
@@ -292,9 +321,12 @@ and form-specific styles.</p>
 				<div class="modal-header">
 					<h5 class="modal-title" id="updateModalLabel">Update Profile</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+						aria-label="Close"
+						style="background-color: transparent; border: none;"
+						onmouseover="this.style.backgroundColor='lightcoral';"
+						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body custom-scroll">
 					<form action="updateProfile" method="post">
 						<table class="table table-striped">
 							<thead>
@@ -360,11 +392,21 @@ and form-specific styles.</p>
 								</tr>
 								<tr>
 									<td>Password</td>
-									<td><input type="password" id="passwordField"
-										name="password"
-										value="<%=user != null ? user.getPassword() : ""%>"
-										class="form-control field-editable" disabled
-										style="border: 1px solid lightgray;"></td>
+									<td>
+										<div class="input-group">
+											<input type="password" id="passwordField" name="password"
+												value="<%=user != null ? user.getPassword() : ""%>"
+												class="form-control field-editable" disabled
+												style="border: 1px solid lightgray;">
+											<div class="input-group-append" style="border-radius: 10px;">
+												<span class="input-group-text" id="toggle-password-field"
+													data-toggle="password" data-target="passwordField"
+													style="height: 38px; line-height: 38px; background-color: white;">
+													<i class="fas fa-eye"></i>
+												</span>
+											</div>
+										</div>
+									</td>
 									<td class="text-center">
 										<button type="button" id="editPasswordBtn"
 											class="btn btn-warning btn-sm">
@@ -417,7 +459,10 @@ and form-specific styles.</p>
 				<div class="modal-header">
 					<h5 class="modal-title" id="deleteModalLabel">Delete Profile</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+						aria-label="Close"
+						style="background-color: transparent; border: none;"
+						onmouseover="this.style.backgroundColor='lightcoral';"
+						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
 				<div class="modal-body">
 					<p>Are you sure you want to delete your profile?</p>
@@ -440,14 +485,18 @@ and form-specific styles.</p>
 					<h5 class="modal-title" id="confirmDeleteModalLabel">Confirm
 						Delete Profile</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close"></button>
+						aria-label="Close"
+						style="background-color: transparent; border: none;"
+						onmouseover="this.style.backgroundColor='lightcoral';"
+						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
 				<div class="modal-body">
 					<form action="deleteProfile" method="post">
 						<div class="mb-3">
 							<label for="email" class="form-label">Email</label> <input
 								type="email" class="form-control" id="email" name="email"
-								required style="border: 1px solid lightgray;"
+								required
+								style="border: 1px solid lightgray; background-color: lightcoral;"
 								value="<%=user != null ? user.getEmail() : ""%>" readonly>
 						</div>
 						<div class="mb-3">
@@ -469,6 +518,7 @@ and form-specific styles.</p>
 
 	<!-- Include external JavaScript files for functionality and interactivity -->
 
+	<script type="text/javascript" src="admin/styles/password.js"></script>
 	<!-- Link to the local JavaScript file for profile-specific functionality -->
 	<script type="text/javascript" src="profile.js"></script>
 
@@ -484,6 +534,7 @@ and form-specific styles.</p>
 		src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.2/js/bootstrap.min.js"></script>
 
 	<!-- Include Bootstrap 5.0.2 JavaScript bundle with Popper.js integrated -->
+
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"

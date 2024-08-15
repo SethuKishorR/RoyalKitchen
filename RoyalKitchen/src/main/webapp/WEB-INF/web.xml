@@ -14,10 +14,10 @@
     The welcome-file-list element specifies the default file to be served
     when a directory is accessed. 
     In this case, if a user navigates to the root of the application, 
-    the server will return the index.html file.
+    the server will return the index.jsp file.
     -->
     <welcome-file-list>
-        <welcome-file>index.html</welcome-file>
+        <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
      
 </web-app>

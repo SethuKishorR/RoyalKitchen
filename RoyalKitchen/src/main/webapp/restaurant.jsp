@@ -4,29 +4,7 @@
 <%@ page import="com.tapfoods.model.User"%>
 
 <%
-/**
- * <p>This code block retrieves the user object from the session. If the user is not authenticated or their email is not set, 
- * it redirects the user to the sign-in page.</p>
- * 
- * <p>The check ensures that the user is logged in and has a valid email address before allowing access to the current page. 
- * If the user is not authenticated, they are redirected to the sign-in page to log in.</p>
- * 
- * <p>The cache control headers are set to prevent caching of the redirection page. This ensures that the browser or any 
- * intermediary caches do not store the redirected page and always fetches the latest version when the user is redirected 
- * to the sign-in page.</p>
- */
 user = (User) session.getAttribute("user");
-if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
-	// Ensure proper cache control for redirected pages
-	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
-	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
-	response.setDateHeader("Expires", 0); // Proxies
-
-	// Redirect to sign-in page
-	response.sendRedirect("signIn.jsp");
-	// Ensure no further content is processed
-	return;
-}
 %>
 
 <!DOCTYPE html>
@@ -54,12 +32,13 @@ if (user == null || user.getEmail() == null || user.getEmail().isEmpty()) {
     Favicon for the website
     <p>Displays the website icon in the browser tab</p>
     -->
-<link rel="icon" href="images/logo.png" type="image/png">
+<link rel="icon" href="admin/images/logo.png" type="image/png">
 
 <!--
     Link to the Bootstrap CSS file
     <p>Includes Bootstrap for styling</p>
     -->
+
 <link
 	href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.2/css/bootstrap.min.css"
 	rel="stylesheet">

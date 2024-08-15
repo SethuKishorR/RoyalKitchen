@@ -2,29 +2,47 @@ package com.tapfoods.model;
 
 /**
  * The Restaurant class represents a restaurant entity with attributes such as restaurant ID,
- * restaurant name, delivery time, cuisine type, address, ratings, active status, admin ID, and image path.
+ * restaurant name, delivery time, cuisine type, address, ratings, active status, user ID, admin ID, and image path.
  */
 public class Restaurant {
-	private int restaurantid;
+	private Integer restaurantid;
 	private String restaurantname;
 	private int deliverytime;
 	private String cuisinetype;
 	private String address;
 	private float ratings;
 	private String isactive;
-	private int adminid;
 	private String imagepath;
+	private Integer adminid_fk;
 
 	/**
 	 * Default constructor.
+	 * <p>
+	 * Initializes a new instance of the Restaurant class with default values.
+	 * </p>
 	 */
 	public Restaurant() {
 		super();
 	}
 
 	/**
-	 * Parameterized constructor.
+	 * Parameterized constructor for minimal signup information.
+	 * <p>
+	 * This constructor initializes the Restaurant object with minimal parameters: restaurant name and address.
+	 * Other fields are left uninitialized.
+	 * </p>
 	 * 
+	 * @param restaurantname the restaurant name
+	 * @param address the address
+	 */
+	public Restaurant(String restaurantname, String address) {
+		super();
+		this.restaurantname = restaurantname;
+		this.address = address;
+	}
+
+	/**
+	 * Parameterized constructor.
 	 * <p>
 	 * This constructor initializes the Restaurant object with the specified values.
 	 * </p>
@@ -36,11 +54,11 @@ public class Restaurant {
 	 * @param address the address
 	 * @param ratings the ratings
 	 * @param isactive the active status
-	 * @param adminid the admin ID
 	 * @param imagepath the image path
+	 * @param adminid_fk the foreign key referencing the admin ID
 	 */
 	public Restaurant(int restaurantid, String restaurantname, int deliverytime, String cuisinetype, String address,
-			float ratings, String isactive, int adminid, String imagepath) {
+			float ratings, String isactive, String imagepath, int adminid_fk) {
 		super();
 		this.restaurantid = restaurantid;
 		this.restaurantname = restaurantname;
@@ -49,13 +67,12 @@ public class Restaurant {
 		this.address = address;
 		this.ratings = ratings;
 		this.isactive = isactive;
-		this.adminid = adminid;
 		this.imagepath = imagepath;
+		this.adminid_fk = adminid_fk;
 	}
 
 	/**
 	 * Parameterized constructor without restaurant ID.
-	 * 
 	 * <p>
 	 * This constructor initializes the Restaurant object with the specified values, except for the restaurant ID.
 	 * </p>
@@ -66,11 +83,11 @@ public class Restaurant {
 	 * @param address the address
 	 * @param ratings the ratings
 	 * @param isactive the active status
-	 * @param adminid the admin ID
 	 * @param imagepath the image path
+	 * @param adminid_fk the foreign key referencing the admin ID
 	 */
 	public Restaurant(String restaurantname, int deliverytime, String cuisinetype, String address, float ratings,
-			String isactive, int adminid, String imagepath) {
+			String isactive, String imagepath, int adminid_fk) {
 		super();
 		this.restaurantname = restaurantname;
 		this.deliverytime = deliverytime;
@@ -78,26 +95,24 @@ public class Restaurant {
 		this.address = address;
 		this.ratings = ratings;
 		this.isactive = isactive;
-		this.adminid = adminid;
 		this.imagepath = imagepath;
+		this.adminid_fk = adminid_fk;
 	}
 
 	/**
 	 * Gets the restaurant ID.
-	 * 
 	 * <p>
 	 * This method returns the unique identifier for the restaurant.
 	 * </p>
 	 * 
 	 * @return the restaurant ID
 	 */
-	public int getRestaurantid() {
+	public Integer getRestaurantid() {
 		return restaurantid;
 	}
 
 	/**
 	 * Sets the restaurant ID.
-	 * 
 	 * <p>
 	 * This method sets the unique identifier for the restaurant.
 	 * </p>
@@ -110,7 +125,6 @@ public class Restaurant {
 
 	/**
 	 * Gets the restaurant name.
-	 * 
 	 * <p>
 	 * This method returns the name of the restaurant.
 	 * </p>
@@ -123,7 +137,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the restaurant name.
-	 * 
 	 * <p>
 	 * This method sets the name of the restaurant.
 	 * </p>
@@ -136,7 +149,6 @@ public class Restaurant {
 
 	/**
 	 * Gets the delivery time.
-	 * 
 	 * <p>
 	 * This method returns the estimated delivery time for the restaurant.
 	 * </p>
@@ -149,7 +161,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the delivery time.
-	 * 
 	 * <p>
 	 * This method sets the estimated delivery time for the restaurant.
 	 * </p>
@@ -162,7 +173,6 @@ public class Restaurant {
 
 	/**
 	 * Gets the cuisine type.
-	 * 
 	 * <p>
 	 * This method returns the type of cuisine offered by the restaurant.
 	 * </p>
@@ -175,7 +185,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the cuisine type.
-	 * 
 	 * <p>
 	 * This method sets the type of cuisine offered by the restaurant.
 	 * </p>
@@ -188,7 +197,6 @@ public class Restaurant {
 
 	/**
 	 * Gets the address.
-	 * 
 	 * <p>
 	 * This method returns the address of the restaurant.
 	 * </p>
@@ -201,7 +209,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the address.
-	 * 
 	 * <p>
 	 * This method sets the address of the restaurant.
 	 * </p>
@@ -214,7 +221,6 @@ public class Restaurant {
 
 	/**
 	 * Gets the ratings.
-	 * 
 	 * <p>
 	 * This method returns the rating of the restaurant.
 	 * </p>
@@ -227,7 +233,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the ratings.
-	 * 
 	 * <p>
 	 * This method sets the rating of the restaurant.
 	 * </p>
@@ -240,7 +245,6 @@ public class Restaurant {
 
 	/**
 	 * Gets the active status.
-	 * 
 	 * <p>
 	 * This method returns the active status of the restaurant.
 	 * </p>
@@ -253,7 +257,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the active status.
-	 * 
 	 * <p>
 	 * This method sets the active status of the restaurant.
 	 * </p>
@@ -265,34 +268,7 @@ public class Restaurant {
 	}
 
 	/**
-	 * Gets the admin ID.
-	 * 
-	 * <p>
-	 * This method returns the ID of the admin associated with the restaurant.
-	 * </p>
-	 * 
-	 * @return the admin ID
-	 */
-	public int getAdminid() {
-		return adminid;
-	}
-
-	/**
-	 * Sets the admin ID.
-	 * 
-	 * <p>
-	 * This method sets the ID of the admin associated with the restaurant.
-	 * </p>
-	 * 
-	 * @param adminid the admin ID to set
-	 */
-	public void setAdminid(int adminid) {
-		this.adminid = adminid;
-	}
-
-	/**
 	 * Gets the image path.
-	 * 
 	 * <p>
 	 * This method returns the path to the image of the restaurant.
 	 * </p>
@@ -305,7 +281,6 @@ public class Restaurant {
 
 	/**
 	 * Sets the image path.
-	 * 
 	 * <p>
 	 * This method sets the path to the image of the restaurant.
 	 * </p>
@@ -317,8 +292,31 @@ public class Restaurant {
 	}
 
 	/**
-	 * Returns a string representation of the restaurant object.
+	 * Gets the foreign key referencing the admin ID.
+	 * <p>
+	 * This method returns the foreign key that references the admin ID.
+	 * </p>
 	 * 
+	 * @return the foreign key referencing the admin ID
+	 */
+	public Integer getAdminid_fk() {
+		return adminid_fk;
+	}
+
+	/**
+	 * Sets the foreign key referencing the admin ID.
+	 * <p>
+	 * This method sets the foreign key that references the admin ID.
+	 * </p>
+	 * 
+	 * @param adminid_fk the foreign key referencing the admin ID to set
+	 */
+	public void setAdminid_fk(int adminid_fk) {
+		this.adminid_fk = adminid_fk;
+	}
+
+	/**
+	 * Returns a string representation of the restaurant object.
 	 * <p>
 	 * This method provides a string representation of the Restaurant object, including its attributes.
 	 * </p>
@@ -329,6 +327,6 @@ public class Restaurant {
 	public String toString() {
 		return "Restaurant [restaurantid=" + restaurantid + ", restaurantname=" + restaurantname + ", deliverytime="
 				+ deliverytime + ", cuisinetype=" + cuisinetype + ", address=" + address + ", ratings=" + ratings
-				+ ", isactive=" + isactive + ", adminid=" + adminid + ", imagepath=" + imagepath + "]";
+				+ ", isactive=" + isactive + ", imagepath=" + imagepath + ", adminid_fk=" + adminid_fk + "]";
 	}
 }

@@ -18,13 +18,13 @@
     Favicon link
     <p>Specifies the icon to be used in the browser tab and bookmarks</p>
     -->
-<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
+<link rel="icon" href="styles/images/favicon.png" type="image/png">
 
 <!--
     The title of the document
     <p>Displayed on the browser tab</p>
     -->
-<title>Error</title>
+<title>Success</title>
 
 <!--
     Link to the Bootstrap CSS file
@@ -38,35 +38,35 @@
     Link to the custom stylesheet
     <p>Includes custom styles</p>
     -->
-<link rel="stylesheet" href="admin/styles/style.css">
+<link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
 	<!--
     Background and container setup
-    <p>Centers the error message on the page with a background</p>
+    <p>Centers the success message on the page with a background</p>
     -->
 	<div class="bg">
 		<div
 			class="container d-flex justify-content-center align-items-center my-5">
 			<div class="glass-effect col-10 col-md-8 col-lg-6 col-xl-4">
 				<!--
-                Error message heading
-                <p>Displays the title of the error page</p>
+                Success message heading
+                <p>Displays the title of the success page</p>
                 -->
-				<h3 class="text-center mt-4">Error</h3>
+				<h3 class="text-center mt-4">Success</h3>
 
 				<!--
-                Error message display
-                <p>Shows the error message passed from the server</p>
+                Success message display
+                <p>Shows the success message passed from the server</p>
                 -->
-				<div class="alert alert-danger text-center"
+				<div class="alert alert-success text-center"
 					style="max-width: 100%; word-wrap: break-word; overflow-wrap: break-word;">
 					<%
 					String message = (String) request.getAttribute("message");
-					if (message != null) {
+					if (message != null && !message.isEmpty()) {
 						out.print(message);
 					} else {
-						out.print("Session expired. Please click 'Back' to sign in again.");
+						out.print("Something went wrong, please try again later!");
 					}
 					%>
 				</div>
@@ -76,8 +76,13 @@
                 <p>Provides a link to redirect the user to the specified URL</p>
                 -->
 				<p class="text-center mt-3">
+					<%
+					String redirectUrl = (String) request.getAttribute("redirectUrl");
+					System.out.println("Redirect URL:- " + redirectUrl);
+					%>
 					<a
-						href="<%=request.getAttribute("redirectUrl") != null ? request.getAttribute("redirectUrl") : "signIn.jsp"%>"
+						href="<%=request.getAttribute("redirectUrl") != null ? request.getAttribute("redirectUrl")
+		: request.getContextPath() + "/index.jsp"%>"
 						class="btn btn-danger">Back</a>
 				</p>
 			</div>

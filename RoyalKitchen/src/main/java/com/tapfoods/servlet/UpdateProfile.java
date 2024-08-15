@@ -64,6 +64,16 @@ public class UpdateProfile extends HttpServlet {
 			return;
 		}
 
+		if (password != null && !password.trim().isEmpty()) {
+			if (password.length() < 8 || password.length() > 25) {
+				req.setAttribute("message", "Password must be between 8 and 25 characters long.");
+				req.setAttribute("redirectUrl", "restaurant.jsp"); // Redirect back to the update profile page
+				req.getRequestDispatcher("error.jsp").forward(req, resp);
+				return;
+			}
+			currentUser.setPassword(password);
+		}
+
 		/**
 		 * Update user details if parameters are not null or empty.
 		 * <p>
@@ -95,5 +105,22 @@ public class UpdateProfile extends HttpServlet {
 			req.setAttribute("redirectUrl", "restaurant.jsp");
 			req.getRequestDispatcher("success.jsp").forward(req, resp);
 		}
+	}
+
+	/**
+	 * Handles HTTP GET requests by delegating to the POST request handler.
+	 * <p>
+	 * This method ensures that GET requests are processed in the same way as POST requests by calling the 
+	 * {@link #doPost(HttpServletRequest, HttpServletResponse)} method.
+	 * </p>
+	 * 
+	 * @param req  The {@link HttpServletRequest} object that contains the request from the client.
+	 * @param resp The {@link HttpServletResponse} object used to send a response to the client.
+	 * @throws ServletException If the request cannot be handled.
+	 * @throws IOException      If an I/O error occurs while handling the request or response.
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
 	}
 }

@@ -53,8 +53,8 @@ public class SignUp extends HttpServlet {
 			errorMessage = "Invalid email format";
 		} else if (userDao.emailExists(email)) {
 			errorMessage = "Email already exists";
-		} else if (password.length() < 8) {
-			errorMessage = "Password must be at least 8 characters long";
+		} else if (password.length() < 8 || password.length() > 25) {
+			errorMessage = "Password must be between 8 and 25 characters long";
 		} else if (!password.equals(confirmpassword)) {
 			errorMessage = "Passwords do not match";
 		}
@@ -105,5 +105,22 @@ public class SignUp extends HttpServlet {
 		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
 		Pattern pattern = Pattern.compile(emailRegex);
 		return email != null && pattern.matcher(email).matches();
+	}
+
+	/**
+	 * Handles HTTP GET requests by delegating to the POST request handler.
+	 * <p>
+	 * This method ensures that GET requests are processed in the same way as POST requests by calling the 
+	 * {@link #doPost(HttpServletRequest, HttpServletResponse)} method.
+	 * </p>
+	 * 
+	 * @param req  The {@link HttpServletRequest} object that contains the request from the client.
+	 * @param resp The {@link HttpServletResponse} object used to send a response to the client.
+	 * @throws ServletException If the request cannot be handled.
+	 * @throws IOException      If an I/O error occurs while handling the request or response.
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
 	}
 }

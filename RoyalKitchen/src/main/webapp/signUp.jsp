@@ -18,7 +18,10 @@
     Favicon link
     <p>Specifies the icon to be used in the browser tab and bookmarks</p>
     -->
-<link rel="icon" href="styles/images/favicon.png" type="image/png">
+<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+	rel="stylesheet">
 
 <!--
     The title of the document
@@ -38,7 +41,7 @@
     Link to the custom stylesheet
     <p>Includes custom styles</p>
     -->
-<link rel="stylesheet" href="styles/style.css">
+<link rel="stylesheet" href="admin/styles/style.css">
 </head>
 <body>
 	<!--
@@ -70,23 +73,36 @@
 							placeholder="Enter email" required>
 					</div>
 					<div class="form-group">
-						<!--
-                        Password input field
-                        <p>Collects the user's password</p>
-                        -->
-						<label for="password">Password</label> <input type="password"
-							class="form-control" id="password" name="password"
-							placeholder="Password" required>
+						<label for="password">Password</label>
+						<div class="input-group">
+							<input type="password" class="form-control" id="password"
+								name="password" placeholder="Password" required>
+							<div class="input-group-append">
+								<span class="input-group-text form-control" id="toggle-password"
+									data-toggle="password" data-target="password"> <i
+									class="fas fa-eye"></i>
+								</span>
+							</div>
+						</div>
+						<small class="form-text text-black">Password must be
+							between 8-25 characters.</small>
 					</div>
 					<div class="form-group">
-						<!--
-                        Confirm password input field
-                        <p>Ensures the user confirms their password</p>
-                        -->
-						<label for="confirm-password">Confirm Password</label> <input
-							type="password" class="form-control" id="confirm-password"
-							name="confirmpassword" placeholder="Confirm Password" required>
+						<label for="confirm-password">Confirm Password</label>
+						<div class="input-group">
+							<input type="password" class="form-control" id="confirm-password"
+								name="confirmpassword" placeholder="Confirm Password" required>
+							<div class="input-group-append">
+								<span class="input-group-text form-control" id="toggle-confirm-password"
+									data-toggle="password" data-target="confirm-password"> <i
+									class="fas fa-eye"></i>
+								</span>
+							</div>
+						</div>
+						<small class="form-text text-black">Password and confirm
+							password should match.</small>
 					</div>
+
 					<!--
                     Submit button
                     <p>Submits the form</p>
@@ -109,6 +125,7 @@
     jQuery library
     <p>Includes the jQuery library for JavaScript functionality</p>
     -->
+	<script type="text/javascript" src="admin/styles/password.js"></script>
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 
 	<!--

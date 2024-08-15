@@ -14,7 +14,10 @@
     Favicon link
     <p>Specifies the icon to be used in the browser tab and bookmarks</p>
     -->
-<link rel="icon" href="styles/images/favicon.png" type="image/png">
+<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+	rel="stylesheet">
 
 <!--
     Page title
@@ -34,7 +37,7 @@
     Custom CSS
     <p>Includes custom styles for the sign-in page</p>
     -->
-<link rel="stylesheet" href="styles/style.css">
+<link rel="stylesheet" href="admin/styles/style.css">
 </head>
 
 <body>
@@ -68,13 +71,20 @@
 					</div>
 					<div class="form-group">
 						<label for="password">Password</label>
-						<!--
-                        Password input field
-                        <p>Allows users to enter their password</p>
-                        -->
-						<input type="password" class="form-control" id="password"
-							name="password" placeholder="Password" required>
+						<div class="input-group">
+							<input type="password" class="form-control" id="password"
+								name="password" placeholder="Password" required>
+							<div class="input-group-append" style="border-radius: 10px;">
+								<span class="input-group-text form-control" id="toggle-password"
+									data-toggle="password" data-target="password"> <i
+									class="fas fa-eye"></i>
+								</span>
+							</div>
+						</div>
+						<small class="form-text text-black">Password must be
+							between 8-25 characters.</small>
 					</div>
+
 					<!--
                     Sign-in button
                     <p>Submits the form to sign in</p>
@@ -97,6 +107,7 @@
     JavaScript files
     <p>Includes jQuery, Popper, and Bootstrap JavaScript files for functionality</p>
     -->
+	<script type="text/javascript" src="admin/styles/password.js"></script>
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script
 		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

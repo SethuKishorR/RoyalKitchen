@@ -1,22 +1,21 @@
 @charset "UTF-8";
+	/* Specifies the character encoding for the CSS file */
 
 /**
  * Import Color Variables
- * <p>
- * This statement imports the color variables defined in the 'colors.css' file. 
+ * 
+ * <p>This statement imports the color variables defined in the 'colors.css' file. 
  * These variables are used throughout the stylesheet to ensure consistent color usage 
- * and facilitate easy updates to the color scheme.
- * </p>
+ * and facilitate easy updates to the color scheme.</p>
  */
 @import url('colors.css');
 
 /**
  * Navbar Styles
- * <p>
- * This section defines the styling for the fixed navbar, including its background color, 
+ * 
+ * <p>This section defines the styling for the fixed navbar, including its background color, 
  * shadow, padding, and text color. It also specifies the appearance of navigation links, 
- * buttons, and dropdown menus within the navbar.
- * </p>
+ * buttons, and dropdown menus within the navbar.</p>
  */
 .navbar {
 	position: fixed;
@@ -70,6 +69,12 @@
 	margin: 0 0.5rem;
 }
 
+/**
+ * Dropdown Menu Styles
+ * 
+ * <p>This section defines the appearance and behavior of dropdown menus 
+ * within the navbar, including border radius, shadows, and internal spacing.</p>
+ */
 .dropdown-menu {
 	border-radius: 0;
 	box-shadow: 0 4px 8px var(--rgba-shadow-light);
@@ -120,11 +125,17 @@
 	background-color: var(--color-light-gray);
 }
 
+.dropdown-menu.dropdown-menu-center {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: 0; /* Adjust if needed */
+}
+
 /**
  * Modal Content
- * <p>
- * This section styles the modal content with rounded corners to match the design scheme.
- * </p>
+ * 
+ * <p>This section styles the modal content with rounded corners to match the design scheme.</p>
  */
 .modal-content {
 	border-radius: 0.5rem;

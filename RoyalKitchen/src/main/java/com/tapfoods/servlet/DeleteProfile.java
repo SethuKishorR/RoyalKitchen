@@ -110,4 +110,21 @@ public class DeleteProfile extends HttpServlet {
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 		}
 	}
+
+	/**
+	 * Handles HTTP GET requests by delegating to the POST request handler.
+	 * <p>
+	 * This method ensures that GET requests are processed in the same way as POST requests by calling the 
+	 * {@link #doPost(HttpServletRequest, HttpServletResponse)} method.
+	 * </p>
+	 * 
+	 * @param req  The {@link HttpServletRequest} object that contains the request from the client.
+	 * @param resp The {@link HttpServletResponse} object used to send a response to the client.
+	 * @throws ServletException If the request cannot be handled.
+	 * @throws IOException      If an I/O error occurs while handling the request or response.
+	 */
+	@Override
+	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		doPost(req, resp);
+	}
 }

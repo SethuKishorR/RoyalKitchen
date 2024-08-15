@@ -1,0 +1,120 @@
+@charset "UTF-8";
+
+/** 
+ * Custom Input Styles
+ * <p>
+ * Applies a consistent border style to all input fields,
+ * overriding any conflicting styles with the use of !important.
+ * </p>
+ */
+input {
+	border: solid 1px lightgray !important;
+}
+
+/** 
+ * Format Information Text 
+ * <p>
+ * Styles small informational text, typically used to provide users 
+ * with guidelines or additional information about form inputs.
+ * </p>
+ */
+.format-info {
+	font-size: small;
+	color: black;
+	margin-top: 5px;
+}
+
+/** 
+ * Multi-Step Form Container
+ * <p>
+ * Controls the visibility of each form step. Initially hidden 
+ * to allow progressive disclosure of form sections.
+ * </p>
+ */
+.form-step {
+	display: none;
+}
+
+/** 
+ * Progress Bar Container
+ * <p>
+ * Configures the appearance and spacing of the progress bar used
+ * to visually represent the user's progress through the form steps.
+ * </p>
+ */
+.progress {
+	height: 20px;
+	margin-bottom: 1rem;
+}
+
+/** 
+ * Progress Bar Indicator
+ * <p>
+ * Initially sets the progress bar width to 0%, which will be updated 
+ * dynamically as the user completes steps in the form.
+ * </p>
+ */
+.progress-bar {
+	width: 0%;
+}
+
+/** 
+ * Navigation Button - Next
+ * <p>
+ * Hides the "Next" button initially. This button will be displayed 
+ * as the user progresses through the form steps.
+ * </p>
+ */
+#nextButton {
+	display: none;
+	margin-left: auto;
+}
+
+/** 
+ * Submission Button
+ * <p>
+ * Hides the "Submit All" button initially. This button will be shown 
+ * when all form steps are completed and the user is ready to submit.
+ * </p>
+ */
+#btnSubmitAll {
+	display: none;
+	margin-left: auto;
+}
+
+/** 
+ * Existing Account Link
+ * <p>
+ * Controls the visibility of the "Have an Account" link, which
+ * provides users with an option to navigate to the sign-in page.
+ * </p>
+ */
+#haveAccount {
+	display: none;
+	margin-left: auto;
+}
+
+/** 
+ * Button Container
+ * <p>
+ * Ensures that navigation and submission buttons are evenly spaced 
+ * and aligned for a consistent and user-friendly interface.
+ * </p>
+ */
+.button-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+/** 
+ * Process Description Text
+ * <p>
+ * Styles the descriptive text that accompanies each step of the process, 
+ * using a smaller font and lighter color to avoid overpowering the main content.
+ * </p>
+ */
+.process-description {
+	font-size: 0.875rem;
+	color: #6c757d;
+	margin-bottom: 1rem;
+}
