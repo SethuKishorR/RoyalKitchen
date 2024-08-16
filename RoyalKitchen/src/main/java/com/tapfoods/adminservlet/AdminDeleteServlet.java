@@ -76,8 +76,14 @@ public class AdminDeleteServlet extends HttpServlet {
         }
 
         Connection con = null;
-        AdminDAO adminDAO = new AdminDAOImpl();
-        RestaurantDAO restaurantDAO = new RestaurantDAOImpl();
+        AdminDAO adminDAO = null;
+        RestaurantDAO restaurantDAO = null;
+		try {
+			adminDAO = new AdminDAOImpl();
+			restaurantDAO = new RestaurantDAOImpl();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
         try {
             con = DBUtils.myConnect(); // Get connection from DBUtils
@@ -87,7 +93,7 @@ public class AdminDeleteServlet extends HttpServlet {
 
             // Delete restaurant first
             if (restaurantId > 0) {
-                int restaurantResult = restaurantDAO.deleteRestaurant(restaurantId, con);
+                int restaurantResult = restaurantDAO.deleteRestaurant(con, restaurantId);
                 if (restaurantResult <= 0) {
                     con.rollback(); // Rollback if restaurant deletion fails
                     request.setAttribute("message", "Failed to delete associated restaurant.");
@@ -98,7 +104,7 @@ public class AdminDeleteServlet extends HttpServlet {
             }
 
             // Delete admin
-            int adminResult = adminDAO.deleteAdmin(adminId, con);
+            int adminResult = adminDAO.deleteAdmin(con, adminId);
             if (adminResult > 0) {
                 con.commit(); // Commit transaction if deletion is successful
                 session.invalidate(); // Invalidate session after successful deletion

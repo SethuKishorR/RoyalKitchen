@@ -55,8 +55,12 @@ public class AdminSignUpServlet extends HttpServlet {
 	 */
 	@Override
 	public void init() throws ServletException {
-		adminDAO = new AdminDAOImpl();
-		restaurantDAO = new RestaurantDAOImpl();
+		try {
+			adminDAO = new AdminDAOImpl();
+			restaurantDAO = new RestaurantDAOImpl();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

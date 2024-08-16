@@ -1,12 +1,17 @@
 package com.tapfoods.adminservlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import com.tapfoods.DAO.AdminDAO;
 import com.tapfoods.DAOImpl.AdminDAOImpl;
 import com.tapfoods.model.Admin;
@@ -24,6 +29,9 @@ import com.tapfoods.model.Admin;
 @WebServlet("/admin/updateAdminProfile")
 public class AdminUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+
+	// Regex pattern for validating the password
+	private static final String PASSWORD_PATTERN = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
 
 	/**
 	 * Handles HTTP POST requests for updating the admin profile.
@@ -60,7 +68,12 @@ public class AdminUpdateServlet extends HttpServlet {
 
 		String password = req.getParameter("password");
 
-		AdminDAO adminDAO = new AdminDAOImpl();
+		AdminDAO adminDAO = null;
+		try {
+			adminDAO = new AdminDAOImpl();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		Admin currentAdmin = adminDAO.getAdmin(sessionAdmin.getAdminkey());
 
 		/**
@@ -87,6 +100,16 @@ public class AdminUpdateServlet extends HttpServlet {
 		if (password != null && !password.trim().isEmpty()) {
 			if (password.length() < 8 || password.length() > 25) {
 				req.setAttribute("message", "Password must be between 8 and 25 characters long.");
+				req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+				req.getRequestDispatcher("error.jsp").forward(req, resp);
+				return;
+			}
+
+			// Validate password against the pattern
+			Pattern pattern = Pattern.compile(PASSWORD_PATTERN);
+			Matcher matcher = pattern.matcher(password);
+			if (!matcher.matches()) {
+				req.setAttribute("message", "Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character (@$!%*?&).");
 				req.setAttribute("redirectUrl", "adminRestaurant.jsp");
 				req.getRequestDispatcher("error.jsp").forward(req, resp);
 				return;

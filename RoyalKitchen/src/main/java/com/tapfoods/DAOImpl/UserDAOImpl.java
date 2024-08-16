@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 import com.tapfoods.DAO.UserDAO;
 import com.tapfoods.DBUtils.DBUtils;
@@ -18,9 +17,11 @@ import com.tapfoods.model.User;
  * </p>
  */
 public class UserDAOImpl implements UserDAO {
-	private static final Logger logger = Logger.getLogger(UserDAOImpl.class.getName());
-
 	private Connection con;
+	private PreparedStatement pstmt;
+	private Statement stmt;
+	private ResultSet resultSet;
+
 	private static final String ADD_USER = "INSERT INTO `user` (`username`, `email`, `phonenumber`, `address`, `password`) VALUES (?, ?, ?, ?, ?)";
 	private static final String GET_ALL_USER = "SELECT * FROM `user`";
 	private static final String GET_ON_EMAIL = "SELECT * FROM `user` WHERE `email`=?";
@@ -28,17 +29,22 @@ public class UserDAOImpl implements UserDAO {
 	private static final String DELETE_ON_EMAIL = "DELETE FROM `user` WHERE `email`=?";
 	private static final String CHECK_EMAIL_EXISTS = "SELECT 1 FROM `user` WHERE `email`=?";
 
+	private int status = 0;
+
 	/**
 	 * Constructs a new {@code UserDAOImpl} instance and establishes a database connection.
 	 * <p>
 	 * This constructor initializes the database connection using {@link DBUtils#myConnect()}.
 	 * </p>
+	 * 
+	 * @throws Exception if there is an error establishing the database connection
 	 */
-	public UserDAOImpl() {
+	public UserDAOImpl() throws Exception {
 		try {
 			con = DBUtils.myConnect();
 		} catch (Exception e) {
-			logger.severe("Failed to connect to the database: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Failed to connect to the database: " + e.getMessage(), e);
 		}
 	}
 
@@ -50,11 +56,13 @@ public class UserDAOImpl implements UserDAO {
 	 * 
 	 * @param u the {@link User} object to be added
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws Exception if there is an error during the operation
 	 */
 	@Override
-	public int addUser(User u) {
-		int status = 0;
-		try (PreparedStatement pstmt = con.prepareStatement(ADD_USER)) {
+	public int addUser(User u) throws Exception {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(ADD_USER);
 			pstmt.setString(1, u.getUsername());
 			pstmt.setString(2, u.getEmail());
 			pstmt.setString(3, u.getPhonenumber());
@@ -62,7 +70,10 @@ public class UserDAOImpl implements UserDAO {
 			pstmt.setString(5, u.getPassword());
 			status = pstmt.executeUpdate();
 		} catch (Exception e) {
-			logger.severe("Error adding user: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error adding user: " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -74,14 +85,21 @@ public class UserDAOImpl implements UserDAO {
 	 * </p>
 	 * 
 	 * @return an {@link ArrayList} of {@link User} objects representing all users
+	 * @throws Exception if there is an error during the operation
 	 */
 	@Override
-	public ArrayList<User> getAllUser() {
+	public ArrayList<User> getAllUser() throws Exception {
 		ArrayList<User> userList = new ArrayList<>();
-		try (Statement stmt = con.createStatement(); ResultSet resultSet = stmt.executeQuery(GET_ALL_USER)) {
+		try {
+			con = DBUtils.myConnect();
+			stmt = con.createStatement();
+			resultSet = stmt.executeQuery(GET_ALL_USER);
 			userList = extractUserListFromResultSet(resultSet);
 		} catch (Exception e) {
-			logger.severe("Error retrieving all users: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error retrieving all users: " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(con, stmt, null, resultSet);
 		}
 		return userList;
 	}
@@ -94,22 +112,26 @@ public class UserDAOImpl implements UserDAO {
 	 * 
 	 * @param email the email address of the user to be retrieved
 	 * @return the {@link User} object corresponding to the specified email, or {@code null} if no user is found
+	 * @throws Exception if there is an error during the operation
 	 */
 	@Override
-	public User getUser(String email) {
-		User user = null;
-		try (PreparedStatement pstmt = con.prepareStatement(GET_ON_EMAIL)) {
+	public User getUser(String email) throws Exception {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(GET_ON_EMAIL);
 			pstmt.setString(1, email);
-			try (ResultSet resultSet = pstmt.executeQuery()) {
-				ArrayList<User> userList = extractUserListFromResultSet(resultSet);
-				if (!userList.isEmpty()) {
-					user = userList.get(0);
-				}
+			resultSet = pstmt.executeQuery();
+			ArrayList<User> userList = extractUserListFromResultSet(resultSet);
+			if (!userList.isEmpty()) {
+				return userList.get(0);
 			}
 		} catch (Exception e) {
-			logger.severe("Error retrieving user by email: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error retrieving user by email: " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, resultSet);
 		}
-		return user;
+		return null;
 	}
 
 	/**
@@ -120,17 +142,22 @@ public class UserDAOImpl implements UserDAO {
 	 * 
 	 * @param email the email address to be checked
 	 * @return {@code true} if the email exists, {@code false} otherwise
+	 * @throws Exception if there is an error during the operation
 	 */
 	@Override
-	public boolean emailExists(String email) {
+	public boolean emailExists(String email) throws Exception {
 		boolean exists = false;
-		try (PreparedStatement pstmt = con.prepareStatement(CHECK_EMAIL_EXISTS)) {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(CHECK_EMAIL_EXISTS);
 			pstmt.setString(1, email);
-			try (ResultSet resultSet = pstmt.executeQuery()) {
-				exists = resultSet.next(); // If resultSet.next() is true, email exists
-			}
+			resultSet = pstmt.executeQuery();
+			exists = resultSet.next(); // If resultSet.next() is true, email exists
 		} catch (Exception e) {
-			logger.severe("Error checking if email exists: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error checking if email exists: " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, resultSet);
 		}
 		return exists;
 	}
@@ -143,11 +170,13 @@ public class UserDAOImpl implements UserDAO {
 	 * 
 	 * @param u the {@link User} object containing updated information
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws Exception if there is an error during the operation
 	 */
 	@Override
-	public int updateUser(User u) {
-		int status = 0;
-		try (PreparedStatement pstmt = con.prepareStatement(UPDATE_ON_EMAIL)) {
+	public int updateUser(User u) throws Exception {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(UPDATE_ON_EMAIL);
 			pstmt.setString(1, u.getUsername());
 			pstmt.setString(2, u.getPhonenumber());
 			pstmt.setString(3, u.getAddress());
@@ -155,7 +184,10 @@ public class UserDAOImpl implements UserDAO {
 			pstmt.setString(5, u.getEmail());
 			status = pstmt.executeUpdate();
 		} catch (Exception e) {
-			logger.severe("Error updating user: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error updating user: " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -168,15 +200,20 @@ public class UserDAOImpl implements UserDAO {
 	 * 
 	 * @param email the email address of the user to be deleted
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws Exception if there is an error during the operation
 	 */
 	@Override
-	public int deleteUser(String email) {
-		int status = 0;
-		try (PreparedStatement pstmt = con.prepareStatement(DELETE_ON_EMAIL)) {
+	public int deleteUser(String email) throws Exception {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(DELETE_ON_EMAIL);
 			pstmt.setString(1, email);
 			status = pstmt.executeUpdate();
 		} catch (Exception e) {
-			logger.severe("Error deleting user: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error deleting user: " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -189,23 +226,25 @@ public class UserDAOImpl implements UserDAO {
 	 * 
 	 * @param resultSet the {@link ResultSet} object containing user data
 	 * @return an {@link ArrayList} of {@link User} objects
+	 * @throws Exception if there is an error during the operation
 	 */
-	private ArrayList<User> extractUserListFromResultSet(ResultSet resultSet) {
-		ArrayList<User> users = new ArrayList<>();
+	private ArrayList<User> extractUserListFromResultSet(ResultSet resultSet) throws Exception {
+		ArrayList<User> userList = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
-				users.add(new User(
-						resultSet.getInt("userid"),
-						resultSet.getString("username"),
-						resultSet.getString("email"),
-						resultSet.getString("phonenumber"),
-						resultSet.getString("address"),
-						resultSet.getString("password")
-						));
+				User user = new User();
+				user.setUserid(resultSet.getInt("userid"));
+				user.setUsername(resultSet.getString("username"));
+				user.setEmail(resultSet.getString("email"));
+				user.setPhonenumber(resultSet.getString("phonenumber"));
+				user.setAddress(resultSet.getString("address"));
+				user.setPassword(resultSet.getString("password"));
+				userList.add(user);
 			}
 		} catch (Exception e) {
-			logger.severe("Error extracting users from result set: " + e.getMessage());
+			e.printStackTrace();
+			throw new Exception("Error extracting user list from ResultSet: " + e.getMessage(), e);
 		}
-		return users;
+		return userList;
 	}
 }

@@ -1,5 +1,6 @@
 package com.tapfoods.DAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import com.tapfoods.model.Ordertable;
 
@@ -19,8 +20,9 @@ public interface OrderTableDAO {
 	 * 
 	 * @param ot the {@link Ordertable} object to be added
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws SQLException if a database access error occurs
 	 */
-	int addOrderTable(Ordertable ot);
+	int addOrderTable(Ordertable ot) throws SQLException;
 
 	/**
 	 * Retrieves all orders from the database.
@@ -29,8 +31,9 @@ public interface OrderTableDAO {
 	 * </p>
 	 * 
 	 * @return an {@link ArrayList} of {@link Ordertable} objects representing all orders
+	 * @throws SQLException if a database access error occurs
 	 */
-	ArrayList<Ordertable> getAllOrderTable();
+	ArrayList<Ordertable> getAllOrderTable() throws SQLException;
 
 	/**
 	 * Retrieves an order from the database by its ID.
@@ -40,6 +43,7 @@ public interface OrderTableDAO {
 	 * 
 	 * @param orderid the ID of the order to be retrieved
 	 * @return the {@link Ordertable} object corresponding to the specified ID, or {@code null} if no order is found
+	 * @throws SQLException if a database access error occurs
 	 */
-	Ordertable getOrderTable(int orderid);
+	Ordertable getOrderTable(int orderid) throws SQLException;
 }

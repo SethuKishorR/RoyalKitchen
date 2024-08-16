@@ -1,46 +1,39 @@
 package com.tapfoods.DAO;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
-
 import com.tapfoods.model.OrderHistory;
 
 /**
- * The {@code OrderHistoryDAO} interface defines the data access operations for {@link OrderHistory} entities.
+ * The OrderHistoryDAO interface defines the methods for data access operations on {@link OrderHistory} entities.
  * <p>
- * This interface provides methods for adding, retrieving, and updating order histories.
+ * This interface specifies the operations to add, retrieve, and list order histories in the database.
  * </p>
  */
 public interface OrderHistoryDAO {
+    /**
+     * Adds a new order history to the database.
+     * 
+     * @param oh the {@link OrderHistory} object to be added
+     * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+     * @throws SQLException if a database access error occurs
+     */
+    int addOrderHistory(OrderHistory oh) throws SQLException;
 
-	/**
-	 * Adds a new order history to the database.
-	 * <p>
-	 * This method takes an {@link OrderHistory} object and inserts it into the database.
-	 * </p>
-	 * 
-	 * @param oh the {@link OrderHistory} object to be added
-	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
-	 */
-	int addOrderHistory(OrderHistory oh);
+    /**
+     * Retrieves all order histories from the database.
+     * 
+     * @return an {@link ArrayList} of {@link OrderHistory} objects representing all order histories
+     * @throws SQLException if a database access error occurs
+     */
+    ArrayList<OrderHistory> getAllOrderHistories() throws SQLException;
 
-	/**
-	 * Retrieves all order histories from the database.
-	 * <p>
-	 * This method returns a list of all {@link OrderHistory} objects stored in the database.
-	 * </p>
-	 * 
-	 * @return an {@link ArrayList} of {@link OrderHistory} objects representing all order histories
-	 */
-	ArrayList<OrderHistory> getAllOrderHistories();
-
-	/**
-	 * Retrieves an order history from the database by its ID.
-	 * <p>
-	 * This method searches for an {@link OrderHistory} with the specified ID.
-	 * </p>
-	 * 
-	 * @param orderhistoryid the ID of the order history to be retrieved
-	 * @return the {@link OrderHistory} object corresponding to the specified ID, or {@code null} if no order history is found
-	 */
-	OrderHistory getOrderHistory(int orderhistoryid);
+    /**
+     * Retrieves an order history from the database by its ID.
+     * 
+     * @param orderhistoryid the ID of the order history to be retrieved
+     * @return the {@link OrderHistory} object corresponding to the specified ID, or {@code null} if no order history is found
+     * @throws SQLException if a database access error occurs
+     */
+    OrderHistory getOrderHistory(int orderhistoryid) throws SQLException;
 }

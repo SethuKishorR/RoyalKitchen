@@ -43,7 +43,12 @@ public class SignIn extends HttpServlet {
 		String email = req.getParameter("email");
 		String password = req.getParameter("password");
 		User user = null;
-		UserDAO userDao = new UserDAOImpl();
+		UserDAO userDao = null;
+		try {
+			userDao = new UserDAOImpl();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		String errorMessage = null;
 
 		/**
@@ -64,7 +69,11 @@ public class SignIn extends HttpServlet {
 			 * message is set.
 			 * </p>
 			 */
-			user = userDao.getUser(email);
+			try {
+				user = userDao.getUser(email);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			if (user == null) {
 				errorMessage = "Email not found";

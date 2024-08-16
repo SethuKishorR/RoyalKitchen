@@ -1,6 +1,8 @@
 package com.tapfoods.adminservlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -60,8 +62,14 @@ public class RestaurantUpdateServlet extends HttpServlet {
 
 		int restaurantId = sessionAdmin.getRestaurantid_fk();
 
-		RestaurantDAO restaurantDAO = new RestaurantDAOImpl();
-		Restaurant currentRestaurant = restaurantDAO.getRestaurant(restaurantId);
+		RestaurantDAO restaurantDAO = null;
+		Restaurant currentRestaurant = null;
+		try {
+			restaurantDAO = new RestaurantDAOImpl();
+			currentRestaurant = restaurantDAO.getRestaurant(restaurantId);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		/**
 		 * Retrieves the current restaurant details based on the restaurant ID. If the restaurant is not found, it sets 
@@ -115,7 +123,12 @@ public class RestaurantUpdateServlet extends HttpServlet {
 			currentRestaurant.setImagepath(imagePath);
 		}
 
-		int status = restaurantDAO.updateRestaurant(currentRestaurant);
+		int status = 0;
+		try {
+			status = restaurantDAO.updateRestaurant(currentRestaurant);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
 		/**
 		 * Attempts to update the restaurant profile in the database. If the update is unsuccessful, it sets an error message 

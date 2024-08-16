@@ -3,6 +3,7 @@ package com.tapfoods.DAOImpl;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -19,9 +20,6 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 	private PreparedStatement pstmt;
 	private Statement stmt;
 	private ResultSet resultSet;
-	private Ordertable ordertable;
-
-	private ArrayList<Ordertable> ordertableList = new ArrayList<Ordertable>();
 
 	private static final String ADD_ORDER_TABLE = "INSERT INTO `ordertable` (`fk_restaurantid`, `fk_userid`, `totalamount`, `status`, `paymentmode`) VALUES (?, ?, ?, ?, ?)";
 	private static final String GET_ALL_ORDER_TABLE = "SELECT * FROM `ordertable`";
@@ -33,11 +31,12 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 	 * Constructs a new {@code OrderTableDAOImpl} instance and establishes a database connection.
 	 * <p>This constructor initializes the database connection using {@link DBUtils#myConnect()}.</p>
 	 */
-	public OrderTableDAOImpl() {
+	public OrderTableDAOImpl() throws SQLException {
 		try {
 			con = DBUtils.myConnect();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Failed to connect to the database", e);
 		}
 	}
 
@@ -49,8 +48,9 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
 	 */
 	@Override
-	public int addOrderTable(Ordertable ot) {
+	public int addOrderTable(Ordertable ot) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(ADD_ORDER_TABLE);
 			pstmt.setInt(1, ot.getFk_restaurantid());
 			pstmt.setInt(2, ot.getFk_userid());
@@ -60,6 +60,9 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 			status = pstmt.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Failed to add order table", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -71,13 +74,18 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 	 * @return an {@link ArrayList} of {@link Ordertable} objects representing all orders
 	 */
 	@Override
-	public ArrayList<Ordertable> getAllOrderTable() {
+	public ArrayList<Ordertable> getAllOrderTable() throws SQLException {
+		ArrayList<Ordertable> ordertableList = new ArrayList<>();
 		try {
+			con = DBUtils.myConnect();
 			stmt = con.createStatement();
 			resultSet = stmt.executeQuery(GET_ALL_ORDER_TABLE);
 			ordertableList = extractOrdertableListFromResultSet(resultSet);
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Failed to retrieve all order tables", e);
+		} finally {
+			DBUtils.closeResources(con, stmt, null, resultSet);
 		}
 		return ordertableList;
 	}
@@ -90,19 +98,23 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 	 * @return the {@link Ordertable} object corresponding to the specified ID, or {@code null} if no order is found
 	 */
 	@Override
-	public Ordertable getOrderTable(int orderid) {
+	public Ordertable getOrderTable(int orderid) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(GET_ON_ID);
 			pstmt.setInt(1, orderid);
 			resultSet = pstmt.executeQuery();
-			ordertableList = extractOrdertableListFromResultSet(resultSet);
+			ArrayList<Ordertable> ordertableList = extractOrdertableListFromResultSet(resultSet);
 			if (!ordertableList.isEmpty()) {
-				ordertable = ordertableList.get(0);
+				return ordertableList.get(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Failed to retrieve order table by ID", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, resultSet);
 		}
-		return ordertable;
+		return null;
 	}
 
 	/**
@@ -112,7 +124,7 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 	 * @param resultSet the {@link ResultSet} object containing order data
 	 * @return an {@link ArrayList} of {@link Ordertable} objects
 	 */
-	public ArrayList<Ordertable> extractOrdertableListFromResultSet(ResultSet resultSet) {
+	private ArrayList<Ordertable> extractOrdertableListFromResultSet(ResultSet resultSet) throws SQLException {
 		ArrayList<Ordertable> ordertables = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
@@ -127,6 +139,7 @@ public class OrderTableDAOImpl implements OrderTableDAO {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Failed to extract order tables from ResultSet", e);
 		}
 		return ordertables;
 	}

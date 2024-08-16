@@ -1,15 +1,15 @@
 package com.tapfoods.DAOImpl;
 
-import com.tapfoods.DAO.AdminDAO;
-import com.tapfoods.DBUtils.DBUtils;
-import com.tapfoods.model.Admin;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import com.tapfoods.DAO.AdminDAO;
+import com.tapfoods.DBUtils.DBUtils;
+import com.tapfoods.model.Admin;
 
 /**
  * The AdminDAOImpl class implements the {@link AdminDAO} interface.
@@ -28,11 +28,13 @@ public class AdminDAOImpl implements AdminDAO {
 	private static final String DELETE_ON_ID = "DELETE FROM `admin` WHERE `adminid`=?";
 	private static final String CHECK_ADMINSKEY_EXISTS = "SELECT COUNT(*) FROM `admin` WHERE `adminkey`=?";
 
+	private int status = 0;
+	
 	/**
 	 * Constructs a new {@code AdminDAOImpl} instance and establishes a database connection.
 	 * <p>This constructor initializes the database connection using {@link DBUtils#myConnect()}.</p>
 	 */
-	public AdminDAOImpl() {
+	public AdminDAOImpl() throws SQLException {
 		try {
 			con = DBUtils.myConnect();
 		} catch (Exception e) {
@@ -44,34 +46,66 @@ public class AdminDAOImpl implements AdminDAO {
 	/**
 	 * Adds a new admin to the database.
 	 * <p>This method prepares an SQL {@code INSERT} statement and executes it to add an {@link Admin} object to the database.</p>
+	 * <p>It also retrieves and returns the ID of the newly added admin.</p>
 	 * 
-	 * @param con the {@link Connection} object used for database operations
-	 * @param admin the {@link Admin} object to be added
-	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
-	 * @throws SQLException if a database access error occurs
+	 * @param con the {@link Connection} object used for executing the SQL statement
+	 * @param admin the {@link Admin} object containing the details to be added
+	 * @return an integer representing the ID of the newly added admin
+	 * @throws SQLException if a database access error occurs or if the SQL operation fails
 	 */
 	public int addAdmin(Connection con, Admin admin) throws SQLException {
-		int generatedAdminId = 0;
-		try (PreparedStatement pstmt = con.prepareStatement(ADD_ADMIN, Statement.RETURN_GENERATED_KEYS)) {
+		try {
+			pstmt = con.prepareStatement(ADD_ADMIN, Statement.RETURN_GENERATED_KEYS);
 			pstmt.setString(1, admin.getAdminkey());
 			pstmt.setString(2, admin.getPassword());
-			pstmt.setInt(3, admin.getRestaurantid_fk()); // Set the foreign key
+			pstmt.setInt(3, admin.getRestaurantid_fk());
 
 			int affectedRows = pstmt.executeUpdate();
 
 			if (affectedRows > 0) {
-				// Retrieve the generated admin ID
-				try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-					if (generatedKeys.next()) {
-						generatedAdminId = generatedKeys.getInt(1);
-					}
+				resultSet = pstmt.getGeneratedKeys();
+				if (resultSet.next()) {
+					status = resultSet.getInt(1);
 				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Error while adding admin.", e);
 		}
-		return generatedAdminId;
+		return status;
+	}
+
+	/**
+	 * Adds a new admin to the database.
+	 * <p>This method prepares an SQL {@code INSERT} statement and executes it to add an {@link Admin} object to the database.</p>
+	 * 
+	 * @param admin the {@link Admin} object to be added
+	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws SQLException if a database access error occurs
+	 */
+	public int addAdmin(Admin admin) throws SQLException {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(ADD_ADMIN, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, admin.getAdminkey());
+			pstmt.setString(2, admin.getPassword());
+			pstmt.setInt(3, admin.getRestaurantid_fk());
+
+			int affectedRows = pstmt.executeUpdate();
+
+			if (affectedRows > 0) {
+				resultSet = pstmt.getGeneratedKeys();
+				if (resultSet.next()) {
+					status = resultSet.getInt(1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error while adding admin.", e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, resultSet);
+		}
+		return status;
 	}
 
 	/**
@@ -84,12 +118,15 @@ public class AdminDAOImpl implements AdminDAO {
 	public ArrayList<Admin> getAllAdmin() {
 		ArrayList<Admin> adminList = new ArrayList<>();
 		try {
+			con = DBUtils.myConnect();
 			stmt = con.createStatement();
 			resultSet = stmt.executeQuery(GET_ALL_ADMIN);
 			adminList = extractAdminListFromResultSet(resultSet);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to retrieve all admins.", e);
+		} finally {
+			DBUtils.closeResources(null, stmt, null, resultSet);
 		}
 		return adminList;
 	}
@@ -103,20 +140,22 @@ public class AdminDAOImpl implements AdminDAO {
 	 */
 	@Override
 	public Admin getAdmin(String adminkey) {
-		Admin admin = null;
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(GET_ON_KEY);
 			pstmt.setString(1, adminkey);
 			resultSet = pstmt.executeQuery();
 			ArrayList<Admin> adminList = extractAdminListFromResultSet(resultSet);
 			if (!adminList.isEmpty()) {
-				admin = adminList.get(0);
+				return adminList.get(0);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to retrieve admin by key.", e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, resultSet);
 		}
-		return admin;
+		return null;
 	}
 
 	/**
@@ -130,6 +169,7 @@ public class AdminDAOImpl implements AdminDAO {
 	public boolean adminkeyExists(String adminkey) {
 		boolean exists = false;
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(CHECK_ADMINSKEY_EXISTS);
 			pstmt.setString(1, adminkey);
 			resultSet = pstmt.executeQuery();
@@ -139,6 +179,8 @@ public class AdminDAOImpl implements AdminDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to check if admin key exists.", e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, resultSet);
 		}
 		return exists;
 	}
@@ -152,8 +194,8 @@ public class AdminDAOImpl implements AdminDAO {
 	 */
 	@Override
 	public int updateAdmin(Admin a) {
-		int status = 0;
 		try {
+			con = DBUtils.myConnect();
 			con.setAutoCommit(false); // Start transaction
 			pstmt = con.prepareStatement(UPDATE_ON_ID);
 			pstmt.setString(1, a.getAdminkey());
@@ -172,6 +214,30 @@ public class AdminDAOImpl implements AdminDAO {
 			}
 			e.printStackTrace();
 			throw new RuntimeException("Failed to update admin.", e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, null);
+		}
+		return status;
+	}
+
+	/**
+	 * Deletes an admin from the database by their ID using an external connection.
+	 * <p>This method prepares an SQL {@code DELETE} statement with a specified ID and executes it to remove the corresponding {@link Admin} record.</p>
+	 * 
+	 * @param adminid the ID of the admin to be deleted
+	 * @param con the {@link Connection} to be used for the operation
+	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws SQLException if a database access error occurs
+	 */
+	@Override
+	public int deleteAdmin(Connection con, int adminid) throws SQLException {
+		try {
+			pstmt = con.prepareStatement(DELETE_ON_ID);
+			pstmt.setInt(1, adminid);
+			status = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to delete admin.", e);
 		}
 		return status;
 	}
@@ -181,16 +247,13 @@ public class AdminDAOImpl implements AdminDAO {
 	 * <p>This method prepares an SQL {@code DELETE} statement with a specified ID and executes it to remove the corresponding {@link Admin} record.</p>
 	 * 
 	 * @param adminid the ID of the admin to be deleted
-	 * @param con the {@link Connection} object used for database operations
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
 	 * @throws SQLException if a database access error occurs
 	 */
 	@Override
-	public int deleteAdmin(int adminid, Connection con) throws SQLException {
-		int status = 0;
-		PreparedStatement pstmt = null;
-
+	public int deleteAdmin(int adminid) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(DELETE_ON_ID);
 			pstmt.setInt(1, adminid);
 			status = pstmt.executeUpdate();
@@ -198,13 +261,7 @@ public class AdminDAOImpl implements AdminDAO {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to delete admin.", e);
 		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
+			DBUtils.closeResources(null, null, pstmt, null);
 		}
 		return status;
 	}

@@ -54,8 +54,14 @@ public class UpdateProfile extends HttpServlet {
 		String address = req.getParameter("address");
 		String password = req.getParameter("password");
 
-		UserDAO userDao = new UserDAOImpl();
-		User currentUser = userDao.getUser(email);
+		UserDAO userDao = null;
+		User currentUser = null;
+		try {
+			userDao = new UserDAOImpl();
+			currentUser = userDao.getUser(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if (currentUser == null) {
 			req.setAttribute("message", "User not found. Please log in again.");
@@ -93,7 +99,12 @@ public class UpdateProfile extends HttpServlet {
 			currentUser.setPassword(password);
 		}
 
-		int status = userDao.updateUser(currentUser);
+		int status = 0;
+		try {
+			status = userDao.updateUser(currentUser);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		if (status == 0) {
 			req.setAttribute("message", "User update failed. Please try again.");

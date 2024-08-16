@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import com.tapfoods.DAO.OrderHistoryDAO;
 import com.tapfoods.DBUtils.DBUtils;
@@ -18,9 +19,6 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	private PreparedStatement pstmt;
 	private Statement stmt;
 	private ResultSet resultSet;
-	private OrderHistory orderHistory;
-
-	private ArrayList<OrderHistory> orderHistoryList = new ArrayList<OrderHistory>();
 
 	private static final String ADD_ORDER_HISTORY = "INSERT INTO `orderhistory` (`f_orderid`, `f_userid`, `orderdate`, `totalamount`, `status`) VALUES (?, ?, ?, ?, ?)";
 	private static final String GET_ALL_ORDER_HISTORIES = "SELECT * FROM `orderhistory`";
@@ -32,11 +30,12 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	 * Constructs a new {@code OrderHistoryDAOImpl} instance and establishes a database connection.
 	 * <p>This constructor initializes the database connection using {@link DBUtils#myConnect()}.</p>
 	 */
-	public OrderHistoryDAOImpl() {
+	public OrderHistoryDAOImpl() throws SQLException {
 		try {
 			con = DBUtils.myConnect();
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new RuntimeException("Failed to connect to the database", e);
 		}
 	}
 
@@ -46,10 +45,12 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	 * 
 	 * @param oh the {@link OrderHistory} object to be added
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws SQLException if a database access error occurs
 	 */
 	@Override
-	public int addOrderHistory(OrderHistory oh) {
+	public int addOrderHistory(OrderHistory oh) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(ADD_ORDER_HISTORY);
 			pstmt.setInt(1, oh.getF_orderid());
 			pstmt.setInt(2, oh.getF_userid());
@@ -57,8 +58,11 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 			pstmt.setFloat(4, oh.getTotalamount());
 			pstmt.setString(5, oh.getStatus());
 			status = pstmt.executeUpdate();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new SQLException("Failed to add order history", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -68,15 +72,21 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	 * <p>This method executes an SQL {@code SELECT} statement to retrieve all {@link OrderHistory} records and returns them as an {@link ArrayList}.</p>
 	 * 
 	 * @return an {@link ArrayList} of {@link OrderHistory} objects representing all order histories
+	 * @throws SQLException if a database access error occurs
 	 */
 	@Override
-	public ArrayList<OrderHistory> getAllOrderHistories() {
+	public ArrayList<OrderHistory> getAllOrderHistories() throws SQLException {
+		ArrayList<OrderHistory> orderHistoryList = new ArrayList<>();
 		try {
+			con = DBUtils.myConnect();
 			stmt = con.createStatement();
 			resultSet = stmt.executeQuery(GET_ALL_ORDER_HISTORIES);
 			orderHistoryList = extractOrderHistoryListFromResultSet(resultSet);
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new SQLException("Failed to retrieve all order histories", e);
+		} finally {
+			DBUtils.closeResources(con, stmt, null, resultSet);
 		}
 		return orderHistoryList;
 	}
@@ -87,21 +97,26 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	 * 
 	 * @param orderhistoryid the ID of the order history to be retrieved
 	 * @return the {@link OrderHistory} object corresponding to the specified ID, or {@code null} if no order history is found
+	 * @throws SQLException if a database access error occurs
 	 */
 	@Override
-	public OrderHistory getOrderHistory(int orderhistoryid) {
+	public OrderHistory getOrderHistory(int orderhistoryid) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(GET_ON_ID);
 			pstmt.setInt(1, orderhistoryid);
 			resultSet = pstmt.executeQuery();
-			orderHistoryList = extractOrderHistoryListFromResultSet(resultSet);
+			ArrayList<OrderHistory> orderHistoryList = extractOrderHistoryListFromResultSet(resultSet);
 			if (!orderHistoryList.isEmpty()) {
-				orderHistory = orderHistoryList.get(0);
+				return orderHistoryList.get(0);
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new SQLException("Failed to retrieve order history by ID", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, resultSet);
 		}
-		return orderHistory;
+		return null;
 	}
 
 	/**
@@ -110,8 +125,9 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	 * 
 	 * @param resultSet the {@link ResultSet} object containing order history data
 	 * @return an {@link ArrayList} of {@link OrderHistory} objects
+	 * @throws SQLException if a database access error occurs
 	 */
-	public ArrayList<OrderHistory> extractOrderHistoryListFromResultSet(ResultSet resultSet) {
+	private ArrayList<OrderHistory> extractOrderHistoryListFromResultSet(ResultSet resultSet) throws SQLException {
 		ArrayList<OrderHistory> orderHistories = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
@@ -124,8 +140,9 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 						resultSet.getString("status")
 						));
 			}
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
+			throw new SQLException("Failed to extract order histories from ResultSet", e);
 		}
 		return orderHistories;
 	}

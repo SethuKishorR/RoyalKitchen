@@ -19,8 +19,9 @@ public interface UserDAO {
      * 
      * @param u the {@link User} object to be added
      * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+     * @throws Exception if there is an error during the operation
      */
-    int addUser(User u);
+    int addUser(User u) throws Exception;
 
     /**
      * Retrieves all users from the database.
@@ -29,8 +30,9 @@ public interface UserDAO {
      * </p>
      * 
      * @return an {@link ArrayList} of {@link User} objects representing all users
+     * @throws Exception if there is an error during the operation
      */
-    ArrayList<User> getAllUser();
+    ArrayList<User> getAllUser() throws Exception;
 
     /**
      * Retrieves a user from the database by their email address.
@@ -40,8 +42,9 @@ public interface UserDAO {
      * 
      * @param email the email address of the user to be retrieved
      * @return the {@link User} object corresponding to the specified email, or {@code null} if no user is found
+     * @throws Exception if there is an error during the operation
      */
-    User getUser(String email);
+    User getUser(String email) throws Exception;
 
     /**
      * Checks if a user with the specified email address already exists in the database.
@@ -51,8 +54,9 @@ public interface UserDAO {
      * 
      * @param email the email address to be checked
      * @return {@code true} if a user with the specified email exists, {@code false} otherwise
+     * @throws Exception if there is an error during the operation
      */
-    boolean emailExists(String email);
+    boolean emailExists(String email) throws Exception;
 
     /**
      * Updates an existing user's information in the database.
@@ -62,8 +66,9 @@ public interface UserDAO {
      * 
      * @param u the {@link User} object containing updated information
      * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+     * @throws Exception if there is an error during the operation
      */
-    int updateUser(User u);
+    int updateUser(User u) throws Exception;
 
     /**
      * Deletes a user from the database by their email address.
@@ -73,6 +78,7 @@ public interface UserDAO {
      * 
      * @param email the email address of the user to be deleted
      * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+     * @throws Exception if there is an error during the operation
      */
-    int deleteUser(String email);
+    int deleteUser(String email) throws Exception;
 }

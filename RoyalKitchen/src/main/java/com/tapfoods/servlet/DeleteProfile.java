@@ -66,8 +66,14 @@ public class DeleteProfile extends HttpServlet {
 		String email = sessionUser.getEmail();
 		String password = req.getParameter("password");
 
-		UserDAO userDao = new UserDAOImpl();
-		User currentUser = userDao.getUser(email);
+		UserDAO userDao = null;
+		User currentUser = null;
+		try {
+			userDao = new UserDAOImpl();
+			currentUser = userDao.getUser(email);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		/**
 		 * Verifies the provided password against the one stored in the database. If the password is incorrect or the user is not found, 

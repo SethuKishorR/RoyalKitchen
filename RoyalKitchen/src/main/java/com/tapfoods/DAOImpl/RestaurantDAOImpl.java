@@ -20,7 +20,6 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	private PreparedStatement pstmt;
 	private Statement stmt;
 	private ResultSet resultSet;
-	private ArrayList<Restaurant> restaurantList = new ArrayList<>();
 
 	private static final String CREATE_RESTAURANT = "INSERT INTO `restaurant` (`restaurantname`, `address`, `adminid_fk`) VALUES (?, ?, ?)";
 	private static final String ADD_RESTAURANT = "INSERT INTO `restaurant` (`restaurantname`, `deliverytime`, `cuisinetype`, `address`, `ratings`, `isactive`, `imagepath`, `adminid_fk`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -31,11 +30,13 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	private static final String GET_LAST_ID = "SELECT LAST_INSERT_ID()";
 	private static final String UPDATE_ADMINID = "UPDATE `restaurant` SET `adminid_fk` = ? WHERE `restaurantid` = ?";
 
+	private int status = 0;
+
 	/**
 	 * Constructs a new {@code RestaurantDAOImpl} instance and establishes a database connection.
 	 * <p>This constructor initializes the database connection using {@link DBUtils#myConnect()}.</p>
 	 */
-	public RestaurantDAOImpl() {
+	public RestaurantDAOImpl() throws SQLException {
 		try {
 			con = DBUtils.myConnect();
 		} catch (Exception e) {
@@ -53,32 +54,79 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 */
 	@Override
 	public int createRestaurant(Connection con, Restaurant restaurant) throws SQLException {
-		try (PreparedStatement ps = con.prepareStatement(CREATE_RESTAURANT, Statement.RETURN_GENERATED_KEYS)) {
-			ps.setString(1, restaurant.getRestaurantname());
-			ps.setString(2, restaurant.getAddress());
+		try {
+			pstmt = con.prepareStatement(CREATE_RESTAURANT, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, restaurant.getRestaurantname());
+			pstmt.setString(2, restaurant.getAddress());
 
-			// Handle null adminid_fk during initial creation
 			if (restaurant.getAdminid_fk() != null) {
-				ps.setInt(3, restaurant.getAdminid_fk());
+				pstmt.setInt(3, restaurant.getAdminid_fk());
 			} else {
-				ps.setNull(3, java.sql.Types.INTEGER);
+				pstmt.setNull(3, java.sql.Types.INTEGER);
 			}
 
 			// Execute the update
-			int affectedRows = ps.executeUpdate();
+			int affectedRows = pstmt.executeUpdate();
 
-			// Check if auto-generated key was returned
+			// Check if any rows were affected
 			if (affectedRows > 0) {
-				try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-					if (generatedKeys.next()) {
-						return generatedKeys.getInt(1); // Return the generated key
-					} else {
-						throw new SQLException("Failed to retrieve auto-generated key.");
-					}
+				// Retrieve the generated keys
+				resultSet = pstmt.getGeneratedKeys();
+				if (resultSet.next()) {
+					return resultSet.getInt(1); // Return the generated key
+				} else {
+					throw new SQLException("Failed to retrieve auto-generated key.");
 				}
 			} else {
 				throw new SQLException("No rows affected. Restaurant creation failed.");
 			}
+		} catch (SQLException e) {
+			// Handle the SQL exception
+			e.printStackTrace();
+			throw new RuntimeException("Failed to create restaurant. Please try again later.", e);
+		}
+	}
+
+	/**
+	 * Creates a new restaurant entry in the database.
+	 * <p>This method prepares an SQL {@code INSERT} statement and executes it to add a {@link Restaurant} object to the database.</p>
+	 * 
+	 * @param restaurant the {@link Restaurant} object to be added
+	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws SQLException if a database access error occurs
+	 */
+	@Override
+	public int createRestaurant(Restaurant restaurant) throws SQLException {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(CREATE_RESTAURANT, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setString(1, restaurant.getRestaurantname());
+			pstmt.setString(2, restaurant.getAddress());
+
+			if (restaurant.getAdminid_fk() != null) {
+				pstmt.setInt(3, restaurant.getAdminid_fk());
+			} else {
+				pstmt.setNull(3, java.sql.Types.INTEGER);
+			}
+
+			// Execute the update
+			int affectedRows = pstmt.executeUpdate();
+
+			// Check if any rows were affected
+			if (affectedRows > 0) {
+				// Retrieve the generated keys
+				resultSet = pstmt.getGeneratedKeys();
+				if (resultSet.next()) {
+					return resultSet.getInt(1); // Return the generated key
+				} else {
+					throw new SQLException("Failed to retrieve auto-generated key.");
+				}
+			} else {
+				throw new SQLException("No rows affected. Restaurant creation failed.");
+			}
+		} finally {
+			// Close resources in the finally block
+			DBUtils.closeResources(null, pstmt, null, resultSet);
 		}
 	}
 
@@ -90,9 +138,9 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
 	 */
 	@Override
-	public int addRestaurant(Restaurant r) {
-		int status = 0;
+	public int addRestaurant(Restaurant r) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			con.setAutoCommit(false); // Start transaction
 			pstmt = con.prepareStatement(ADD_RESTAURANT);
 			pstmt.setString(1, r.getRestaurantname());
@@ -115,6 +163,8 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 			}
 			e.printStackTrace();
 			throw new RuntimeException("Failed to add restaurant.", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -126,14 +176,18 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @return an {@link ArrayList} of {@link Restaurant} objects representing all restaurants
 	 */
 	@Override
-	public ArrayList<Restaurant> getAllRestaurant() {
+	public ArrayList<Restaurant> getAllRestaurant() throws SQLException {
+		ArrayList<Restaurant> restaurantList = new ArrayList<>();
 		try {
+			con = DBUtils.myConnect();
 			stmt = con.createStatement();
 			resultSet = stmt.executeQuery(GET_ALL_RESTAURANT);
 			restaurantList = extractRestaurantListFromResultSet(resultSet);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to retrieve all restaurants.", e);
+		} finally {
+			DBUtils.closeResources(con, stmt, null, resultSet);
 		}
 		return restaurantList;
 	}
@@ -146,18 +200,21 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @return the {@link Restaurant} object corresponding to the specified ID, or {@code null} if no restaurant is found
 	 */
 	@Override
-	public Restaurant getRestaurant(int restaurantid) {
+	public Restaurant getRestaurant(int restaurantid) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(GET_ON_ID);
 			pstmt.setInt(1, restaurantid);
 			resultSet = pstmt.executeQuery();
-			restaurantList = extractRestaurantListFromResultSet(resultSet);
+			ArrayList<Restaurant> restaurantList = extractRestaurantListFromResultSet(resultSet);
 			if (!restaurantList.isEmpty()) {
 				return restaurantList.get(0);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to retrieve restaurant by ID.", e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, resultSet);
 		}
 		return null;
 	}
@@ -170,9 +227,9 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
 	 */
 	@Override
-	public int updateRestaurant(Restaurant r) {
-		int status = 0;
+	public int updateRestaurant(Restaurant r) throws SQLException {
 		try {
+			con = DBUtils.myConnect();
 			con.setAutoCommit(false); // Start transaction
 			pstmt = con.prepareStatement(UPDATE_ON_ID);
 			pstmt.setString(1, r.getRestaurantname());
@@ -196,6 +253,8 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 			}
 			e.printStackTrace();
 			throw new RuntimeException("Failed to update restaurant.", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
 		}
 		return status;
 	}
@@ -208,10 +267,7 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
 	 */
 	@Override
-	public int deleteRestaurant(int restaurantid, Connection con) throws SQLException {
-		int status = 0;
-		PreparedStatement pstmt = null;
-
+	public int deleteRestaurant(Connection con, int restaurantid) throws SQLException {
 		try {
 			pstmt = con.prepareStatement(DELETE_ON_ID);
 			pstmt.setInt(1, restaurantid);
@@ -219,7 +275,32 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Failed to delete restaurant.", e);
-		} 
+		}
+		return status;
+	}
+
+
+	/**
+	 * Deletes a restaurant entry from the database by its ID.
+	 * <p>This method prepares an SQL {@code DELETE} statement and executes it to remove a {@link Restaurant} record based on its ID.</p>
+	 * 
+	 * @param restaurantid the ID of the restaurant to be deleted
+	 * @return an integer indicating the result of the operation (e.g., the number of rows affected)
+	 * @throws SQLException if a database access error occurs
+	 */
+	@Override
+	public int deleteRestaurant(int restaurantid) throws SQLException {
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(DELETE_ON_ID);
+			pstmt.setInt(1, restaurantid);
+			status = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Failed to delete restaurant.", e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, null);
+		}
 		return status;
 	}
 
@@ -232,22 +313,28 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 */
 	@Override
 	public int getLastInsertedRestaurantId() throws SQLException {
-		int lastInsertedId = -1; // Default value if no ID is found
-		try (Connection con = DBUtils.myConnect();
-				PreparedStatement stmt = con.prepareStatement(GET_LAST_ID);
-				ResultSet rs = stmt.executeQuery()) {
-			if (rs.next()) {
-				lastInsertedId = rs.getInt(1); // Retrieve the last inserted ID
+		int lastInsertedId = -1;
+
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(GET_LAST_ID);
+			resultSet = pstmt.executeQuery();
+
+			if (resultSet.next()) {
+				lastInsertedId = resultSet.getInt(1);
 			} else {
 				throw new SQLException("Failed to retrieve the last inserted restaurant ID.");
 			}
 		} catch (SQLException e) {
-			// Log and handle the exception
 			e.printStackTrace();
-			throw new RuntimeException("Error while retrieving the last inserted restaurant ID.", e);
+			throw e;
+		} finally {
+			// Clean up resources
+			DBUtils.closeResources(con, pstmt, null, resultSet);
 		}
 		return lastInsertedId;
 	}
+
 
 	/**
 	 * Extracts a list of {@link Restaurant} objects from the provided {@link ResultSet}.
@@ -256,7 +343,7 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @param resultSet the {@link ResultSet} object containing restaurant data
 	 * @return an {@link ArrayList} of {@link Restaurant} objects
 	 */
-	public ArrayList<Restaurant> extractRestaurantListFromResultSet(ResultSet resultSet) {
+	public ArrayList<Restaurant> extractRestaurantListFromResultSet(ResultSet resultSet) throws SQLException {
 		ArrayList<Restaurant> restaurants = new ArrayList<>();
 		try {
 			while (resultSet.next()) {
@@ -289,11 +376,18 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	 * @throws SQLException if a database access error occurs or the SQL statement fails
 	 */
 	public boolean updateRestaurantAdminId(Connection con, Restaurant restaurant) throws SQLException {
-		try (PreparedStatement ps = con.prepareStatement(UPDATE_ADMINID)) {
-			ps.setInt(1, restaurant.getAdminid_fk());
-			ps.setInt(2, restaurant.getRestaurantid()); // Assumes `restaurantid` is available
-			int affectedRows = ps.executeUpdate();
-			return affectedRows > 0;
-		}
+		boolean success = false;
+		try {
+			pstmt = con.prepareStatement(UPDATE_ADMINID);
+			pstmt.setInt(1, restaurant.getAdminid_fk());
+			pstmt.setInt(2, restaurant.getRestaurantid()); // Assumes `restaurantid` is available
+
+			int affectedRows = pstmt.executeUpdate();
+			success = affectedRows > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Error updating restaurant admin ID: " + e);
+		} 
+		return success;
 	}
 }

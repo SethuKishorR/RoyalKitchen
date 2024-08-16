@@ -40,7 +40,12 @@ public class SignUp extends HttpServlet {
 		String password = req.getParameter("password");
 		String confirmpassword = req.getParameter("confirmpassword");
 
-		UserDAO userDao = new UserDAOImpl();
+		UserDAO userDao = null;
+		try {
+			userDao = new UserDAOImpl();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		String errorMessage = null;
 
 		/**
@@ -51,13 +56,18 @@ public class SignUp extends HttpServlet {
 		 */
 		if (!isValidEmail(email)) {
 			errorMessage = "Invalid email format";
-		} else if (userDao.emailExists(email)) {
-			errorMessage = "Email already exists";
-		} else if (password.length() < 8 || password.length() > 25) {
-			errorMessage = "Password must be between 8 and 25 characters long";
-		} else if (!password.equals(confirmpassword)) {
-			errorMessage = "Passwords do not match";
-		}
+		} else
+			try {
+				if (userDao.emailExists(email)) {
+					errorMessage = "Email already exists";
+				} else if (password.length() < 8 || password.length() > 25) {
+					errorMessage = "Password must be between 8 and 25 characters long";
+				} else if (!password.equals(confirmpassword)) {
+					errorMessage = "Passwords do not match";
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		if (errorMessage != null) {
 			/**
@@ -78,7 +88,12 @@ public class SignUp extends HttpServlet {
 			 * </p>
 			 */
 			User user = new User(email, password);
-			int status = userDao.addUser(user);
+			int status = 0;
+			try {
+				status = userDao.addUser(user);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			if (status == 0) {
 				req.setAttribute("message", "User registration failed. Please try again.");
