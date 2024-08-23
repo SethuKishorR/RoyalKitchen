@@ -244,7 +244,9 @@ and form-specific styles.</p>
 					</table>
 					<form action="navbar.jsp" method="post" style="display: inline;">
 						<input type="hidden" name="logout" value="true">
-						<button type="submit" class="btn btn-warning">Logout</button>
+						<button type="submit" class="btn btn-warning">
+							Logout <i class="fas fa-arrow-right" style="font-size: 13px;"></i>
+						</button>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -345,8 +347,9 @@ and form-specific styles.</p>
 										style="border: 1px solid lightgray;"></td>
 									<td class="text-center">
 										<button type="button" class="btn btn-secondary btn-sm"
-											disabled>
-											<i class="fas fa-lock"></i> Cannot Edit
+											disabled
+											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
+											<i class="fas fa-lock"></i>
 										</button>
 									</td>
 								</tr>
@@ -358,8 +361,9 @@ and form-specific styles.</p>
 										style="border: 1px solid lightgray;"></td>
 									<td class="text-center">
 										<button type="button" id="editUsernameBtn"
-											class="btn btn-warning btn-sm">
-											<i class="fas fa-edit"></i> Edit
+											class="btn btn-warning btn-sm"
+											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
+											<i class="fas fa-pencil-alt"></i>
 										</button>
 									</td>
 								</tr>
@@ -372,8 +376,9 @@ and form-specific styles.</p>
 										style="border: 1px solid lightgray;"></td>
 									<td class="text-center">
 										<button type="button" id="editPhoneNumberBtn"
-											class="btn btn-warning btn-sm">
-											<i class="fas fa-edit"></i> Edit
+											class="btn btn-warning btn-sm"
+											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
+											<i class="fas fa-pencil-alt"></i>
 										</button>
 									</td>
 								</tr>
@@ -385,8 +390,9 @@ and form-specific styles.</p>
 										style="border: 1px solid lightgray;"></td>
 									<td class="text-center">
 										<button type="button" id="editAddressBtn"
-											class="btn btn-warning btn-sm">
-											<i class="fas fa-edit"></i> Edit
+											class="btn btn-warning btn-sm"
+											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
+											<i class="fas fa-pencil-alt"></i>
 										</button>
 									</td>
 								</tr>
@@ -409,14 +415,17 @@ and form-specific styles.</p>
 									</td>
 									<td class="text-center">
 										<button type="button" id="editPasswordBtn"
-											class="btn btn-warning btn-sm">
-											<i class="fas fa-edit"></i> Edit
+											class="btn btn-warning btn-sm"
+											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
+											<i class="fas fa-pencil-alt"></i>
 										</button>
 									</td>
 								</tr>
 							</tbody>
 						</table>
-						<button type="submit" class="btn btn-success" id="saveChanges">Update</button>
+						<button type="submit" class="btn btn-success" id="saveChanges">
+							Update <i class="fas fa-cloud-upload-alt"></i>
+						</button>
 					</form>
 				</div>
 				<div class="modal-footer">
@@ -504,8 +513,9 @@ and form-specific styles.</p>
 								type="password" class="form-control" id="password"
 								name="password" required style="border: 1px solid lightgray;">
 						</div>
-						<button type="submit" class="btn btn-danger">Confirm
-							Delete</button>
+						<button type="submit" class="btn btn-danger">
+							Delete <i class="fas fa-trash-alt"></i>
+						</button>
 					</form>
 				</div>
 				<div class="modal-footer">

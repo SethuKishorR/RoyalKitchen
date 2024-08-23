@@ -38,6 +38,18 @@
 </head>
 
 <body>
+	<%
+	// Retrieve the session
+	session = request.getSession(false);
+
+	// Check if the session contains the valid admin access key attribute
+	if (session == null || !"valid".equals(session.getAttribute("adminAccessKey"))) {
+		// Redirect to the index page if the key is invalid or session is missing
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
+		return;
+	}
+	%>
+
 	<!--
     Admin Sign In Container
     <p>Main container for the admin sign-in form, centered and padded for a clean look</p>

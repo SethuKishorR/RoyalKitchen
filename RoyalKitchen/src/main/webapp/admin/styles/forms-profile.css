@@ -34,7 +34,7 @@
  * Changes background color and text color on hover to provide visual feedback.
  * </p>
  */
-#profileDetails:hover, #restaurantDetails:hover {
+#profileDetails:hover, #restaurantDetails:hover, #addMenu:hover {
 	background-color: var(--color-light-green-hover);
 	color: var(--color-dark-text);
 }
@@ -44,7 +44,7 @@
 	color: var(--color-dark-text);
 }
 
-#deleteProfile:hover, #deleteRestaurant:hover {
+#deleteProfile:hover, #deleteRestaurant:hover, #menuDetails:hover {
 	background-color: var(--color-light-coral);
 	color: var(--color-dark-text);
 }

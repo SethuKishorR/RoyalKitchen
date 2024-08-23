@@ -23,8 +23,9 @@ public class MenuDAOImpl implements MenuDAO {
 
 	private static final String ADD_MENU = "INSERT INTO `menu` (`restaurantid`, `menuname`, `price`, `description`, `isavailable`, `imagepath`) VALUES (?, ?, ?, ?, ?, ?)";
 	private static final String GET_ALL_MENU = "SELECT * FROM `menu`";
+	private static final String GET_MENU_RESTAURANT_ID = "SELECT * FROM `menu` WHERE `restaurantid`=?";
 	private static final String GET_ON_ID = "SELECT * FROM `menu` WHERE `menuid`=?";
-	private static final String UPDATE_ON_ID = "UPDATE `menu` SET `restaurantid`=?, `menuname`=?, `price`=?, `description`=?, `isavailable`=?, `imagepath`=? WHERE `menuid`=?";
+	private static final String UPDATE_ON_ID = "UPDATE `menu` SET `menuname`=?, `price`=?, `description`=?, `isavailable`=?, `imagepath`=? WHERE `menuid`=?";
 	private static final String DELETE_ON_ID = "DELETE FROM `menu` WHERE `menuid`=?";
 
 	private int status = 0;
@@ -89,8 +90,34 @@ public class MenuDAOImpl implements MenuDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new SQLException("Error retrieving all menus: " + e.getMessage(), e);
-		} finally {
+		} 
+		finally {
 			DBUtils.closeResources(null, stmt, null, resultSet);
+		}
+		return menuList;
+	}
+
+	/**
+	 * Retrieves menus from the database by restaurant ID.
+	 * 
+	 * @param restaurantId the ID of the restaurant whose menus are to be retrieved
+	 * @return an {@link ArrayList} of {@link Menu} objects
+	 * @throws SQLException if a database access error occurs or the SQL statement fails
+	 */
+	@Override
+	public ArrayList<Menu> getMenusByRestaurantId(int restaurantId) throws SQLException {
+		ArrayList<Menu> menuList = new ArrayList<>();
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(GET_MENU_RESTAURANT_ID);
+			pstmt.setInt(1, restaurantId);
+			resultSet = pstmt.executeQuery();
+			menuList = extractMenuListFromResultSet(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Error retrieving menus by restaurant ID " + restaurantId + ": " + e.getMessage(), e);
+		} finally {
+			DBUtils.closeResources(null, null, pstmt, resultSet);
 		}
 		return menuList;
 	}
@@ -133,21 +160,42 @@ public class MenuDAOImpl implements MenuDAO {
 	 */
 	@Override
 	public int updateMenu(Menu m) throws SQLException {
+		int status = 0;
 		try {
+			// Establish connection
 			con = DBUtils.myConnect();
+			System.out.println("Connection established successfully.");
+
+			// Prepare the SQL statement
 			pstmt = con.prepareStatement(UPDATE_ON_ID);
-			pstmt.setInt(1, m.getRestaurantid());
-			pstmt.setString(2, m.getMenuname());
-			pstmt.setFloat(3, m.getPrice());
-			pstmt.setString(4, m.getDescription());
-			pstmt.setString(5, m.getIsavailable());
-			pstmt.setString(6, m.getImagepath());
-			pstmt.setInt(7, m.getMenuid());
+
+			// Print all received values
+			System.out.println("Updating menu item with the following details:");
+			System.out.println("Menu Name: " + m.getMenuname());
+			System.out.println("Price: " + m.getPrice());
+			System.out.println("Description: " + m.getDescription());
+			System.out.println("Availability: " + m.getIsavailable());
+			System.out.println("Image Path: " + m.getImagepath());
+			System.out.println("Menu ID: " + m.getMenuid());
+
+			// Set parameters for the prepared statement
+			pstmt.setString(1, m.getMenuname());
+			pstmt.setFloat(2, m.getPrice());
+			pstmt.setString(3, m.getDescription());
+			pstmt.setString(4, m.getIsavailable());
+			pstmt.setString(5, m.getImagepath());
+			pstmt.setInt(6, m.getMenuid());
+
+			// Execute the update
+			System.out.println("Executing update with menu ID: " + m.getMenuid());
 			status = pstmt.executeUpdate();
+			System.out.println("Update status: " + status);
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new SQLException("Error updating menu with ID " + m.getMenuid() + ": " + e.getMessage(), e);
 		} finally {
+			// Close resources
 			DBUtils.closeResources(null, null, pstmt, null);
 		}
 		return status;

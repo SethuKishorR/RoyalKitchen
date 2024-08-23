@@ -6,13 +6,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Servlet for handling admin access validation.
  * <p>
  * This servlet processes POST requests to validate the private key entered by the admin. 
  * It checks whether the key matches the expected value and redirects to the appropriate 
- * page based on the validation result.
+ * page based on the validation result. If the key is valid, a session variable is set with 
+ * a timeout of 5 minutes, after which it will be automatically removed.
  * </p>
  * 
  * @see HttpServlet
@@ -44,14 +48,21 @@ public class AdminAccessServlet extends HttpServlet {
 		// Retrieve the key entered by the user
 		String enteredKey = request.getParameter("privateKey");
 
-		/**
-		 * Checks if the entered key matches the original key.
-		 * <p>
-		 * If the key matches, the admin is redirected to the sign-in page. 
-		 * If not, an error message is set and the user is redirected to the error page.
-		 * </p>
-		 */
+		// Check if the entered key matches the original key
 		if (ORIGINAL_KEY.equals(enteredKey)) {
+			// Set session variable
+			HttpSession session = request.getSession();
+			session.setAttribute("adminAccessKey", "valid");
+
+			// Schedule a task to remove the session attribute after 5 minutes
+			Timer timer = new Timer();
+			timer.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					session.removeAttribute("adminAccessKey");
+				}
+			}, 1 * 60 * 1000); // 5 minutes in milliseconds
+
 			// Redirect to admin sign-in page
 			response.sendRedirect("admin/adminSignIn.jsp");
 		} else {

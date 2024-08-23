@@ -34,6 +34,17 @@
 <link rel="stylesheet" href="styles/admin.css">
 </head>
 <body>
+	<%
+	// Retrieve the session
+	session = request.getSession(false);
+
+	// Check if the session contains the valid admin access key attribute
+	if (session == null || !"valid".equals(session.getAttribute("adminAccessKey"))) {
+		// Redirect to the index page if the key is invalid or session is missing
+		response.sendRedirect(request.getContextPath() + "/index.jsp");
+		return;
+	}
+	%>
 	<!-- Initialize session variables for tracking signup steps -->
 	<%
 	session = request.getSession();
@@ -41,7 +52,7 @@
 	Integer currentStep = (Integer) session.getAttribute("currentStep");
 	String platformKey = (String) session.getAttribute("platformKey");
 
-	 // If session variables are not present, set default values
+	// If session variables are not present, set default values
 	if (currentStep == null) {
 		currentStep = 1;
 	}
@@ -280,9 +291,11 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<script>
-		let currentStep = <%= currentStep %>;
+		let currentStep =
+	<%=currentStep%>
+		;
 	</script>
 	<!-- Custom JavaScript for handling modal interactions and form submission -->
 	<script type="text/javascript" src="styles/password.js"></script>

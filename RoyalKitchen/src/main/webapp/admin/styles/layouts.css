@@ -52,7 +52,7 @@ body {
  * </p>
  */
 .form-control:focus {
-	box-shadow: none;
+	box-shadow: none !important;
 }
 
 /**
@@ -101,7 +101,7 @@ body {
  * adjusts spacing for navbar items and form elements to improve layout and usability on smaller screens.
  * </p>
  */
-@media (max-width: 991.98px) {
+@media ( max-width : 991.98px) {
 	.navbar-nav .nav-item {
 		box-shadow: 0 2px 4px var(--rgba-dark);
 		margin-bottom: 0.5rem;

@@ -61,7 +61,7 @@ public class Menu {
 	 * @param isavailable the availability status of the menu item
 	 * @param imagepath the image path of the menu item
 	 */
-	public Menu(int restaurantid, String menuname, float price, String description, String isavailable,
+	public Menu(String menuname, int restaurantid, float price, String description, String isavailable,
 			String imagepath) {
 		super();
 		this.restaurantid = restaurantid;

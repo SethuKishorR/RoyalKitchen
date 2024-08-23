@@ -24,13 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function toggleField(field, button) {
         if (field.hasAttribute('disabled')) {
             field.removeAttribute('disabled');
-            button.innerHTML = '<i class="fas fa-save"></i> Save';
             button.classList.remove('btn-warning');
-            button.classList.add('btn-success');
+            button.classList.add('btn-secondary');
         } else {
             field.setAttribute('disabled', 'disabled');
-            button.innerHTML = '<i class="fas fa-edit"></i> Edit';
-            button.classList.remove('btn-success');
+            button.classList.remove('btn-secondary');
             button.classList.add('btn-warning');
         }
     }
