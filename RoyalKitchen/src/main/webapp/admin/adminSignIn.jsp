@@ -35,20 +35,38 @@
     <p>Includes custom CSS for additional styling</p>
     -->
 <link rel="stylesheet" href="styles/style.css">
+
 </head>
 
 <body>
 	<%
-	// Retrieve the session
 	session = request.getSession(false);
 
-	// Check if the session contains the valid admin access key attribute
-	if (session == null || !"valid".equals(session.getAttribute("adminAccessKey"))) {
-		// Redirect to the index page if the key is invalid or session is missing
+	// Check if the user is logged in
+	if (session == null || session.getAttribute("isLoggedIn") == null) {
+		// Redirect to the sign-in page if the user is not logged in
 		response.sendRedirect(request.getContextPath() + "/index.jsp");
 		return;
 	}
+
+	// Check if the logout request is made
+	if ("POST".equalsIgnoreCase(request.getMethod()) && "true".equals(request.getParameter("logout"))) {
+		session.invalidate(); // Invalidate the session
+		response.sendRedirect(request.getContextPath() + "/index.jsp"); // Redirect to sign-in page
+		return;
+	}
+
+	// Prevent caching to ensure that the logout is effective
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
+	response.setDateHeader("Expires", 0); // Proxies
 	%>
+
+	<!-- Logout button positioned at the top right -->
+	<form method="post" style="display: inline;">
+		<input type="hidden" name="logout" value="true">
+		<button type="submit" class="btn btn-danger logout-btn">Logout</button>
+	</form>
 
 	<!--
     Admin Sign In Container
@@ -89,13 +107,13 @@
                                 -->
 								<div class="input-group-append">
 									<span class="input-group-text" id="toggle-admin-key"
-										data-toggle="password" data-target="adminKey"> <i
+										data-toggle="password" data-target="adminKey" style="cursor: pointer;"> <i
 										class="fas fa-eye"></i>
 									</span>
 								</div>
 							</div>
 							<small class="form-text text-danger">Format:
-								admin.username@restaurantname_address.com</small>
+								admin.username@restaurantname_address</small>
 						</div>
 
 						<div class="form-group">
@@ -111,7 +129,7 @@
                                 -->
 								<div class="input-group-append">
 									<span class="input-group-text" id="toggle-password"
-										data-toggle="password" data-target="password"> <i
+										data-toggle="password" data-target="password" style="cursor: pointer;"> <i
 										class="fas fa-eye"></i>
 									</span>
 								</div>

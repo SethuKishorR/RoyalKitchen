@@ -1,5 +1,6 @@
 package com.tapfoods.model;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 /**
@@ -10,7 +11,7 @@ public class OrderHistory {
 	private int orderhistoryid;
 	private int f_orderid;
 	private int f_userid;
-	private Date orderdate;
+	private Timestamp orderdate;
 	private float totalamount;
 	private String status;
 
@@ -19,6 +20,13 @@ public class OrderHistory {
 	 */
 	public OrderHistory() {
 		super();
+	}
+	public OrderHistory( int f_orderid, int f_userid, float totalamount, String status) {
+		super();
+		this.f_orderid = f_orderid;
+		this.f_userid = f_userid;
+		this.totalamount = totalamount;
+		this.status = status;
 	}
 
 	/**
@@ -35,7 +43,7 @@ public class OrderHistory {
 	 * @param totalamount the total amount of the order
 	 * @param status the status of the order
 	 */
-	public OrderHistory(int orderhistoryid, int f_orderid, int f_userid, Date orderdate, float totalamount, String status) {
+	public OrderHistory(int orderhistoryid, int f_orderid, int f_userid, Timestamp orderdate, float totalamount, String status) {
 		super();
 		this.orderhistoryid = orderhistoryid;
 		this.f_orderid = f_orderid;
@@ -132,21 +140,8 @@ public class OrderHistory {
 	 * 
 	 * @return the order date
 	 */
-	public Date getOrderdate() {
+	public java.sql.Timestamp getOrderdate() {
 		return orderdate;
-	}
-
-	/**
-	 * Sets the order date.
-	 * 
-	 * <p>
-	 * This method sets the date when the order was placed.
-	 * </p>
-	 * 
-	 * @param orderdate the order date to set
-	 */
-	public void setOrderdate(Date orderdate) {
-		this.orderdate = orderdate;
 	}
 
 	/**

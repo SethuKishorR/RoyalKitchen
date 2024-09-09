@@ -50,25 +50,13 @@ public class AdminAccessServlet extends HttpServlet {
 
 		// Check if the entered key matches the original key
 		if (ORIGINAL_KEY.equals(enteredKey)) {
-			// Set session variable
 			HttpSession session = request.getSession();
-			session.setAttribute("adminAccessKey", "valid");
-
-			// Schedule a task to remove the session attribute after 5 minutes
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
-				@Override
-				public void run() {
-					session.removeAttribute("adminAccessKey");
-				}
-			}, 1 * 60 * 1000); // 5 minutes in milliseconds
-
-			// Redirect to admin sign-in page
+			session.setAttribute("isLoggedIn", true);
 			response.sendRedirect("admin/adminSignIn.jsp");
 		} else {
 			// Set error message and redirect link
 			request.setAttribute("message", "Invalid private key. Please make sure to enter the correct key. If you don't know it, contact the administrator.");
-			request.setAttribute("redirectUrl", "index.jsp"); // URL to redirect back to the form
+			request.setAttribute("redirectUrl", "searchRestaurants"); // URL to redirect back to the form
 
 			// Redirect to error page
 			request.getRequestDispatcher("error.jsp").forward(request, response);

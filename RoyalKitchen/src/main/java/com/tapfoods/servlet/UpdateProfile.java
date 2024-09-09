@@ -73,13 +73,23 @@ public class UpdateProfile extends HttpServlet {
 		if (password != null && !password.trim().isEmpty()) {
 			if (password.length() < 8 || password.length() > 25) {
 				req.setAttribute("message", "Password must be between 8 and 25 characters long.");
-				req.setAttribute("redirectUrl", "restaurant.jsp"); // Redirect back to the update profile page
+				req.setAttribute("redirectUrl", "searchRestaurants"); // Redirect back to the update profile page
 				req.getRequestDispatcher("error.jsp").forward(req, resp);
 				return;
 			}
 			currentUser.setPassword(password);
 		}
 
+	    if (phonenumber != null && !phonenumber.trim().isEmpty()) {
+	        if (phonenumber.length() != 10) {
+	            req.setAttribute("message", "Phone number must be exactly 10 characters long.");
+	            req.setAttribute("redirectUrl", "searchRestaurants");
+	            req.getRequestDispatcher("error.jsp").forward(req, resp);
+	            return;
+	        }
+	        currentUser.setPhonenumber(phonenumber);
+	    }
+	    
 		/**
 		 * Update user details if parameters are not null or empty.
 		 * <p>
@@ -108,12 +118,12 @@ public class UpdateProfile extends HttpServlet {
 
 		if (status == 0) {
 			req.setAttribute("message", "User update failed. Please try again.");
-			req.setAttribute("redirectUrl", "restaurant.jsp");
+			req.setAttribute("redirectUrl", "searchRestaurants");
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 		} else {
 			session.setAttribute("user", currentUser);
 			req.setAttribute("message", "Profile updated successfully.");
-			req.setAttribute("redirectUrl", "restaurant.jsp");
+			req.setAttribute("redirectUrl", "searchRestaurants");
 			req.getRequestDispatcher("success.jsp").forward(req, resp);
 		}
 	}

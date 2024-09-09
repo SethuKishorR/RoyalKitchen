@@ -79,7 +79,7 @@
 								name="password" placeholder="Password" required>
 							<div class="input-group-append">
 								<span class="input-group-text form-control" id="toggle-password"
-									data-toggle="password" data-target="password"> <i
+									data-toggle="password" data-target="password" style="cursor: pointer;"> <i
 									class="fas fa-eye"></i>
 								</span>
 							</div>
@@ -94,7 +94,7 @@
 								name="confirmpassword" placeholder="Confirm Password" required>
 							<div class="input-group-append">
 								<span class="input-group-text form-control" id="toggle-confirm-password"
-									data-toggle="password" data-target="confirm-password"> <i
+									data-toggle="password" data-target="confirm-password" style="cursor: pointer;"> <i
 									class="fas fa-eye"></i>
 								</span>
 							</div>

@@ -1,10 +1,14 @@
 package com.tapfoods.model;
 
+import java.io.Serializable;
+
 /**
  * The Menu class represents a menu item entity with attributes such as menu ID,
  * restaurant ID, menu name, price, description, availability status, and image path.
  */
-public class Menu {
+public class Menu implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private int menuid;
 	private int restaurantid;
 	private String menuname;

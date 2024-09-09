@@ -164,19 +164,9 @@ public class MenuDAOImpl implements MenuDAO {
 		try {
 			// Establish connection
 			con = DBUtils.myConnect();
-			System.out.println("Connection established successfully.");
 
 			// Prepare the SQL statement
 			pstmt = con.prepareStatement(UPDATE_ON_ID);
-
-			// Print all received values
-			System.out.println("Updating menu item with the following details:");
-			System.out.println("Menu Name: " + m.getMenuname());
-			System.out.println("Price: " + m.getPrice());
-			System.out.println("Description: " + m.getDescription());
-			System.out.println("Availability: " + m.getIsavailable());
-			System.out.println("Image Path: " + m.getImagepath());
-			System.out.println("Menu ID: " + m.getMenuid());
 
 			// Set parameters for the prepared statement
 			pstmt.setString(1, m.getMenuname());
@@ -187,9 +177,7 @@ public class MenuDAOImpl implements MenuDAO {
 			pstmt.setInt(6, m.getMenuid());
 
 			// Execute the update
-			System.out.println("Executing update with menu ID: " + m.getMenuid());
 			status = pstmt.executeUpdate();
-			System.out.println("Update status: " + status);
 
 		} catch (SQLException e) {
 			e.printStackTrace();

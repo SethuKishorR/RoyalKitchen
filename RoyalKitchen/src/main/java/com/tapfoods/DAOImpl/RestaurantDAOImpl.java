@@ -25,7 +25,7 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 	private static final String ADD_RESTAURANT = "INSERT INTO `restaurant` (`restaurantname`, `deliverytime`, `cuisinetype`, `address`, `ratings`, `isactive`, `imagepath`, `adminid_fk`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String GET_ALL_RESTAURANT = "SELECT * FROM `restaurant`";
 	private static final String GET_ON_ID = "SELECT * FROM `restaurant` WHERE `restaurantid`=?";
-	private static final String UPDATE_ON_ID = "UPDATE `restaurant` SET `restaurantname`=?, `deliverytime`=?, `cuisinetype`=?, `address`=?, `ratings`=?, `isactive`=?, `imagepath`=?, `adminid_fk`=? WHERE `restaurantid`=?";
+	private static final String UPDATE_ON_ID = "UPDATE `restaurant` SET `restaurantname`=?, `deliverytime`=?, `cuisinetype`=?, `address`=?, `ratings`=?, `isactive`=?, `imagepath`=? WHERE `restaurantid`=?";
 	private static final String DELETE_ON_ID = "DELETE FROM `restaurant` WHERE `restaurantid`=?";
 	private static final String GET_LAST_ID = "SELECT LAST_INSERT_ID()";
 	private static final String UPDATE_ADMINID = "UPDATE `restaurant` SET `adminid_fk` = ? WHERE `restaurantid` = ?";
@@ -239,8 +239,7 @@ public class RestaurantDAOImpl implements RestaurantDAO {
 			pstmt.setFloat(5, r.getRatings());
 			pstmt.setString(6, r.getIsactive());
 			pstmt.setString(7, r.getImagepath());
-			pstmt.setInt(8, r.getAdminid_fk());
-			pstmt.setInt(9, r.getRestaurantid());
+			pstmt.setInt(8, r.getRestaurantid());
 			status = pstmt.executeUpdate();
 			con.commit(); // Commit transaction
 		} catch (SQLException e) {

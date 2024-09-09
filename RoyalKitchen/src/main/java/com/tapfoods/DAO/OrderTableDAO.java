@@ -46,4 +46,26 @@ public interface OrderTableDAO {
 	 * @throws SQLException if a database access error occurs
 	 */
 	Ordertable getOrderTable(int orderid) throws SQLException;
+
+	/**
+	 * Retrieves orders from the database by restaurant ID.
+	 * <p>
+	 * This method returns a list of {@link Ordertable} objects associated with the specified restaurant ID.
+	 * </p>
+	 * 
+	 * @param restaurantId the ID of the restaurant whose orders are to be retrieved
+	 * @return an {@link ArrayList} of {@link Ordertable} objects associated with the specified restaurant ID
+	 * @throws SQLException if a database access error occurs
+	 */
+	ArrayList<Ordertable> getOrderTableByRestaurantId(int restaurantid) throws SQLException;
+
+	/**
+	 * Updates the status of an order in the database.
+	 * 
+	 * @param orderId the ID of the order to be updated
+	 * @param status the new status to be set
+	 * @return {@code true} if the update was successful, {@code false} otherwise
+	 * @throws SQLException if a database access error occurs
+	 */
+	boolean updateOrderStatus(int orderid, String status) throws SQLException;
 }

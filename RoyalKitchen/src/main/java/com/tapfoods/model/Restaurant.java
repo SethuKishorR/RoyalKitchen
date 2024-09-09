@@ -1,10 +1,13 @@
 package com.tapfoods.model;
 
+import java.io.Serializable;
+
 /**
  * The Restaurant class represents a restaurant entity with attributes such as restaurant ID,
  * restaurant name, delivery time, cuisine type, address, ratings, active status, user ID, admin ID, and image path.
  */
-public class Restaurant {
+public class Restaurant implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private Integer restaurantid;
 	private String restaurantname;
 	private int deliverytime;
@@ -239,7 +242,7 @@ public class Restaurant {
 	 * 
 	 * @param ratings the ratings to set
 	 */
-	public void setRatings(float ratings) {
+	public void setRatings(Float ratings) {
 		this.ratings = ratings;
 	}
 

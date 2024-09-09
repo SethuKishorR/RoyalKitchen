@@ -84,7 +84,7 @@ public class DeleteProfile extends HttpServlet {
 		 */
 		if (currentUser == null || !currentUser.getPassword().equals(password)) {
 			req.setAttribute("message", "Invalid password. Please try again.");
-			req.setAttribute("redirectUrl", "restaurant.jsp");
+			req.setAttribute("redirectUrl", "searchRestaurants");
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 			return;
 		}
@@ -101,7 +101,7 @@ public class DeleteProfile extends HttpServlet {
 
 			if (status == 0) {
 				req.setAttribute("message", "Profile deletion failed. Please try again.");
-				req.setAttribute("redirectUrl", "restaurant.jsp");
+				req.setAttribute("redirectUrl", "searchRestaurants");
 				req.getRequestDispatcher("error.jsp").forward(req, resp);
 			} else {
 				session.invalidate();
@@ -112,7 +112,7 @@ public class DeleteProfile extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 			req.setAttribute("message", "An error occurred. Please try again.");
-			req.setAttribute("redirectUrl", "restaurant.jsp");
+			req.setAttribute("redirectUrl", "searchRestaurants");
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 		}
 	}

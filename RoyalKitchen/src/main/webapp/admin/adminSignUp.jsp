@@ -34,16 +34,12 @@
 <link rel="stylesheet" href="styles/admin.css">
 </head>
 <body>
-	<%
-	// Retrieve the session
-	session = request.getSession(false);
-
-	// Check if the session contains the valid admin access key attribute
-	if (session == null || !"valid".equals(session.getAttribute("adminAccessKey"))) {
-		// Redirect to the index page if the key is invalid or session is missing
-		response.sendRedirect(request.getContextPath() + "/index.jsp");
-		return;
-	}
+	 <%
+        session = request.getSession(false);
+        if (session == null || session.getAttribute("isLoggedIn") == null) {
+            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            return;
+        }
 	%>
 	<!-- Initialize session variables for tracking signup steps -->
 	<%
@@ -157,7 +153,7 @@
 								<!-- Toggle button to show/hide the platform key -->
 								<div class="input-group-append">
 									<span class="input-group-text" id="toggle-platform-key"
-										data-toggle="password" data-target="platformKey"> <i
+										data-toggle="password" data-target="platformKey" style="cursor: pointer;"> <i
 										class="fas fa-eye"></i>
 									</span>
 								</div>
@@ -198,13 +194,13 @@
 								<!-- Toggle button to show/hide the admin key -->
 								<div class="input-group-append">
 									<span class="input-group-text" id="toggle-admin-key"
-										data-toggle="password" data-target="adminKey"> <i
+										data-toggle="password" data-target="adminKey" style="cursor: pointer;"> <i
 										class="fas fa-eye"></i>
 									</span>
 								</div>
 							</div>
 							<small class="format-info text-danger">Format:
-								admin.adminname@restaurantname_address.com</small>
+								admin.adminname@restaurantname_address</small>
 						</div>
 						<!-- Input field for creating the admin password -->
 						<div class="mb-3">
@@ -215,7 +211,7 @@
 								<!-- Toggle button to show/hide the admin password -->
 								<div class="input-group-append">
 									<span class="input-group-text" data-toggle="password"
-										data-target="password"> <i class="fas fa-eye"></i>
+										data-target="password" style="cursor: pointer;"> <i class="fas fa-eye"></i>
 									</span>
 								</div>
 							</div>
@@ -234,7 +230,7 @@
 									placeholder="Confirm password" required>
 								<div class="input-group-append">
 									<span class="input-group-text" data-toggle="password"
-										data-target="confirm-password"> <i class="fas fa-eye"></i>
+										data-target="confirm-password" style="cursor: pointer;"> <i class="fas fa-eye"></i>
 									</span>
 								</div>
 							</div>

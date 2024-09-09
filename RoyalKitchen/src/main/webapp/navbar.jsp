@@ -35,7 +35,7 @@ User user = (User) session.getAttribute("user");
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
+ <link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
 	rel="stylesheet">
@@ -70,6 +70,19 @@ and form-specific styles.</p>
 <link rel="stylesheet" href="admin/styles/layouts.css">
 <link rel="stylesheet" href="admin/styles/components.css">
 <link rel="stylesheet" href="admin/styles/forms-profile.css">
+
+<style>
+.filter-tag {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.3rem .5rem;
+	margin: 0.25rem;
+	background-color: #e9ecef;
+	font-size: 0.875rem;
+	color: #495057;
+	white-space: nowrap;
+}
+</style>
 </head>
 
 <body>
@@ -91,8 +104,8 @@ and form-specific styles.</p>
     </ul>
     -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-		<div class="container-fluid">
-			<a class="navbar-brand ms-4" href="#"> <img
+		<div class="container">
+			<a class="navbar-brand ms-4 ms-md-0" href="#"> <img
 				src="admin/styles/images/logo.png" alt="" width="30" height="28"
 				class="d-inline-block align-text-top"> RoyalKitchen
 			</a>
@@ -112,17 +125,50 @@ and form-specific styles.</p>
 						<ul class="dropdown-menu dropdown-menu-center mt-lg-4"
 							aria-labelledby="navbarDropdown">
 							<li>
-								<form class="d-flex p-2">
-									<input class="form-control me-2" type="search"
-										placeholder="Search" aria-label="Search"
-										style="border: none; outline: none;">
+								<form class="d-flex p-2" action="globalSearch" method="post"
+									id="searchForm">
+									<input class="form-control me-2" type="search" name="query"
+										id="searchInput" placeholder="Search by name or cuisine"
+										aria-label="Search" style="border: none; outline: none;">
 									<button class="btn outline-primary" type="submit">
 										<i class="fas fa-search"></i>
 									</button>
 								</form>
 							</li>
+							<li class="mt-1">
+								<div class="d-flex flex-wrap justify-content-center mb-3">
+									<button class="btn filter-tag me-2 mb-2"
+										onclick="setSearchValue('biryani')" style="border-radius: 2px !important;">Biryani</button>
+									<button class="btn filter-tag me-2 mb-2"
+										onclick="setSearchValue('ice cream')" style="border-radius: 2px !important;">Ice Cream</button>
+									<button class="btn filter-tag me-2 mb-2"
+										onclick="setSearchValue('spice')" style="border-radius: 2px !important;">Spice</button>
+									<button class="btn filter-tag me-2 mb-2"
+										onclick="setSearchValue('meat')" style="border-radius: 2px !important;">Meat</button>
+									<button class="btn filter-tag me-2 mb-2"
+										onclick="setSearchValue('sweet')" style="border-radius: 2px !important;">Sweet</button>
+									<button class="btn filter-tag me-2 mb-2"
+										onclick="setSearchValue('chicken')" style="border-radius: 2px !important;">Chicken</button>
+								</div>
+							</li>
+						</ul></li>
+
+					<%
+					if (user == null) {
+					%>
+					<li class="nav-item dropdown"><a
+						class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+						role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Auth </a>
+						<ul class="dropdown-menu dropdown-menu-center custom-menu mt-lg-4"
+							aria-labelledby="navbarDropdown">
+							<li><a class="dropdown-item" href="#" data-bs-toggle="modal"
+								data-bs-target="#adminModal" id="adminLogin">Admin</a></li>
+							<li><a class="dropdown-item" href="signIn.jsp"
+								id="userLogin">User</a></li>
 						</ul></li>
 					<%
+					}
 					if (user != null) {
 					%>
 					<li class="nav-item dropdown"><a
@@ -144,10 +190,10 @@ and form-specific styles.</p>
 					<%
 					}
 					%>
-					<li class="nav-item"><a class="nav-link" href="#">Offers</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Reviews</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Help</a></li>
-					<li class="nav-item"><a class="nav-link" href="#">Cart</a></li>
+					<li class="nav-item"><a class="nav-link" href="searchRestaurants">Home</a></li>
+					<li class="nav-item"><a class="nav-link" href="help.jsp">Help</a></li>
+					<li class="nav-item"><a class="nav-link" href="OrderHistory">History</a></li>
+					<li class="nav-item"><a class="nav-link" href="cart.jsp">Cart</a></li>
 					<%
 					if (user == null) {
 					%>
@@ -164,6 +210,51 @@ and form-specific styles.</p>
 			</div>
 		</div>
 	</nav>
+
+	<!-- 
+		<p>Modal for administrator access, including a form for entering a private key.</p>
+	-->
+	<div class="modal fade" id="adminModal" tabindex="-1"
+		aria-labelledby="adminModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="adminModalLabel">Administrator
+						Access</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"
+						style="background-color: transparent; border: none;"
+						onmouseover="this.style.backgroundColor='lightcoral';"
+						onmouseout="this.style.backgroundColor='transparent';"></button>
+				</div>
+				<div class="modal-body">
+					<form action="AdminAccessServlet" method="post">
+						<div class="mb-3">
+							<label for="privateKey" class="form-label">Enter
+								Administrator Private Key</label>
+							<div class="input-group">
+								<input type="password" class="form-control" id="privateKey"
+									name="privateKey" required style="border: solid 1px lightgray;">
+								<div class="input-group-append">
+									<span class="input-group-text" id="toggle-privateKey"
+										data-toggle="password" data-target="privateKey"
+										style="cursor: pointer;"> <i class="fas fa-eye"></i>
+									</span>
+								</div>
+							</div>
+						</div>
+						<small class="info-message mt-3"
+							style="color: red; font-size: 13px;"> ** This field will
+							redirect you to the admin sign-in page. Make sure to enter the
+							correct password. If you don't know it, please contact the
+							administrator. ** </small>
+						<button type="submit" class="btn btn-success"
+							style="margin-left: auto; display: flex;">Submit</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 
 	<!-- Profile Modal -->
 	<div class="modal fade show" id="profileModal" tabindex="-1"
@@ -233,7 +324,7 @@ and form-specific styles.</p>
 										<div class="input-group-append" style="border-radius: 10px;">
 											<span class="input-group-text" id="toggle-profile-password"
 												data-toggle="password" data-target="profilePassword"
-												style="height: 38px; line-height: 38px; background-color: white;">
+												style="height: 38px; line-height: 38px; cursor: pointer;">
 												<i class="fas fa-eye" id="profilePasswordEye"></i>
 											</span>
 										</div>
@@ -285,7 +376,7 @@ and form-specific styles.</p>
 	 */
 	if ("POST".equalsIgnoreCase(request.getMethod()) && "true".equals(request.getParameter("logout"))) {
 		session.invalidate();
-		response.sendRedirect("signIn.jsp");
+		response.sendRedirect("searchRestaurants");
 	}
 	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0
@@ -407,7 +498,7 @@ and form-specific styles.</p>
 											<div class="input-group-append" style="border-radius: 10px;">
 												<span class="input-group-text" id="toggle-password-field"
 													data-toggle="password" data-target="passwordField"
-													style="height: 38px; line-height: 38px; background-color: white;">
+													style="height: 38px; line-height: 38px; background-color: white; cursor: pointer;">
 													<i class="fas fa-eye"></i>
 												</span>
 											</div>
@@ -509,9 +600,17 @@ and form-specific styles.</p>
 								value="<%=user != null ? user.getEmail() : ""%>" readonly>
 						</div>
 						<div class="mb-3">
-							<label for="password" class="form-label">Password</label> <input
-								type="password" class="form-control" id="password"
-								name="password" required style="border: 1px solid lightgray;">
+							<label for="password" class="form-label">Password</label>
+							<div class="input-group">
+								<input type="password" class="form-control" id="password"
+									name="password" required style="border: 1px solid lightgray;">
+								<div class="input-group-append">
+									<span class="input-group-text" id="toggle-password"
+										data-toggle="password" data-target="password"
+										style="cursor: pointer;"> <i class="fas fa-eye"></i>
+									</span>
+								</div>
+							</div>
 						</div>
 						<button type="submit" class="btn btn-danger">
 							Delete <i class="fas fa-trash-alt"></i>
@@ -543,11 +642,21 @@ and form-specific styles.</p>
 	<script
 		src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.2/js/bootstrap.min.js"></script>
 
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 	<!-- Include Bootstrap 5.0.2 JavaScript bundle with Popper.js integrated -->
 
 	<script
 		src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
 		integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
 		crossorigin="anonymous"></script>
+
+	<script>
+		function setSearchValue(query) {
+			document.getElementById('searchInput').value = query;
+			document.getElementById('searchForm').submit();
+		}
+	</script>
 </body>
 </html>

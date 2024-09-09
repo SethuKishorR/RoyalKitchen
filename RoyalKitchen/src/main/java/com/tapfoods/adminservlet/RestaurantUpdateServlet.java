@@ -1,14 +1,16 @@
 package com.tapfoods.adminservlet;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
-
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import com.tapfoods.DAO.RestaurantDAO;
 import com.tapfoods.DAOImpl.RestaurantDAOImpl;
 import com.tapfoods.model.Admin;
@@ -17,42 +19,39 @@ import com.tapfoods.model.Restaurant;
 /**
  * Servlet implementation class RestaurantUpdateServlet
  * <p>
- * This servlet handles the process of updating restaurant profile information. It ensures that the admin is logged in, 
- * retrieves the current restaurant details, validates and updates the provided information, and attempts to update 
- * the restaurant profile in the database. Based on the result, it either forwards to a success page or an error page 
- * with an appropriate message.
+ * This servlet handles the process of updating restaurant profile information.
+ * It ensures that the admin is logged in, retrieves the current restaurant details,
+ * validates and updates the provided information, and attempts to update the restaurant
+ * profile in the database.
  * </p>
  */
 @WebServlet("/admin/updateRestaurantProfile")
+@MultipartConfig(
+		fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+		maxFileSize = 1024 * 1024 * 10,       // 10MB
+		maxRequestSize = 1024 * 1024 * 50     // 50MB
+		)
 public class RestaurantUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	/**
-	 * Handles POST requests for updating the restaurant profile.
+	 * Handles POST requests to update restaurant profile information.
 	 * <p>
-	 * This method retrieves the admin object from the session, checks if the admin is logged in, and retrieves the current 
-	 * restaurant details from the database. It then updates the restaurant fields based on the provided form data and 
-	 * attempts to update the restaurant profile in the database. Depending on the outcome of the update operation, it either 
-	 * forwards to a success page or an error page with an appropriate message.
+	 * This method retrieves the logged-in admin's restaurant ID from the session,
+	 * retrieves the current restaurant details, and updates the restaurant profile
+	 * based on the submitted form data. It also handles file uploads for the restaurant
+	 * image and updates the restaurant record in the database.
 	 * </p>
 	 * 
-	 * @param req  the HttpServletRequest object containing the request data
-	 * @param resp the HttpServletResponse object for sending the response
-	 * @throws ServletException if an error occurs during request handling
-	 * @throws IOException      if an input or output error occurs
+	 * @param req  The {@link HttpServletRequest} object that contains the request from the client.
+	 * @param resp The {@link HttpServletResponse} object used to send a response to the client.
+	 * @throws ServletException If an error occurs while processing the request.
+	 * @throws IOException      If an I/O error occurs while processing the request or response.
 	 */
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		Admin sessionAdmin = (Admin) session.getAttribute("admin");
 
-		/**
-		 * Checks if the admin is logged in by verifying the presence of an admin object in the session. If no admin is found, 
-		 * it sets an error message and redirects to the sign-in page.
-		 * <p>
-		 * If the admin is not found in the session, it forwards to the error page with a message prompting the admin to log in again.
-		 * </p>
-		 */
 		if (sessionAdmin == null) {
 			req.setAttribute("message", "Admin not found. Please log in again.");
 			req.setAttribute("redirectUrl", "adminSignIn.jsp");
@@ -71,13 +70,6 @@ public class RestaurantUpdateServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		/**
-		 * Retrieves the current restaurant details based on the restaurant ID. If the restaurant is not found, it sets 
-		 * an error message and redirects to the restaurant page.
-		 * <p>
-		 * If the restaurant is not found in the database, the request is forwarded to an error page with an appropriate message.
-		 * </p>
-		 */
 		if (currentRestaurant == null) {
 			req.setAttribute("message", "Restaurant not found. Please try again.");
 			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
@@ -92,15 +84,26 @@ public class RestaurantUpdateServlet extends HttpServlet {
 		String address = req.getParameter("address");
 		String ratingsStr = req.getParameter("ratings");
 		String isActive = req.getParameter("isactive");
-		String imagePath = req.getParameter("imagepath");
 
-		/**
-		 * Updates the restaurant fields only if new values are provided. Validates and converts input values before updating.
-		 * <p>
-		 * Updates are applied to the restaurant object based on provided form data. If new values are provided, they are used
-		 * to update the restaurant profile.
-		 * </p>
-		 */
+		// Get the uploaded file
+		Part filePart = req.getPart("imagepath"); // The name "imagepath" should match the input name in your form
+		//        if (filePart == null) {
+		//            req.setAttribute("message", "No file uploaded. Please try again.");
+		//            req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+		//            req.getRequestDispatcher("error.jsp").forward(req, resp);
+		//            return;
+		//        }
+
+		if (filePart != null) {
+			String fileName = extractFileName(filePart);
+			if (fileName != null && !fileName.isEmpty()) {
+				InputStream fileContent = filePart.getInputStream();
+				// Save the file (e.g., to the server) and set the file path
+				currentRestaurant.setImagepath(fileName);
+			}
+		}
+
+		// Update restaurant details
 		if (restaurantName != null && !restaurantName.trim().isEmpty()) {
 			currentRestaurant.setRestaurantname(restaurantName);
 		}
@@ -119,9 +122,6 @@ public class RestaurantUpdateServlet extends HttpServlet {
 		if (isActive != null && !isActive.trim().isEmpty()) {
 			currentRestaurant.setIsactive(isActive);
 		}
-		if (imagePath != null && !imagePath.trim().isEmpty()) {
-			currentRestaurant.setImagepath(imagePath);
-		}
 
 		int status = 0;
 		try {
@@ -130,14 +130,6 @@ public class RestaurantUpdateServlet extends HttpServlet {
 			e.printStackTrace();
 		}
 
-		/**
-		 * Attempts to update the restaurant profile in the database. If the update is unsuccessful, it sets an error message 
-		 * and redirects to the restaurant page. If successful, it updates the session with the new restaurant details and 
-		 * forwards to a success page.
-		 * <p>
-		 * Based on the result of the update operation, the user is either redirected to a success page or shown an error message.
-		 * </p>
-		 */
 		if (status == 0) {
 			req.setAttribute("message", "Restaurant update failed. Please try again.");
 			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
@@ -149,18 +141,22 @@ public class RestaurantUpdateServlet extends HttpServlet {
 			req.getRequestDispatcher("success.jsp").forward(req, resp);
 		}
 	}
-
 	/**
-	 * Handles GET requests by delegating to the POST request handler.
-	 * <p>
-	 * This method ensures that GET requests are processed in the same way as POST requests by calling the {@link #doPost(HttpServletRequest, HttpServletResponse)} method.
-	 * </p>
+	 * Extracts the file name from the {@link Part} header.
 	 * 
-	 * @param req  the HttpServletRequest object containing the request data
-	 * @param resp the HttpServletResponse object for sending the response
-	 * @throws ServletException if an error occurs during request handling
-	 * @throws IOException      if an input or output error occurs
+	 * @param part The {@link Part} object representing the file upload.
+	 * @return The extracted file name.
 	 */
+	private String extractFileName(Part part) {
+		String contentDisposition = part.getHeader("content-disposition");
+		for (String cd : contentDisposition.split(";")) {
+			if (cd.trim().startsWith("filename")) {
+				return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
+			}
+		}
+		return null;
+	}
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doPost(req, resp);

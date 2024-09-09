@@ -34,12 +34,12 @@
  * Changes background color and text color on hover to provide visual feedback.
  * </p>
  */
-#profileDetails:hover, #restaurantDetails:hover, #addMenu:hover {
+#profileDetails:hover, #restaurantDetails:hover, #addMenu:hover, #adminLogin:hover {
 	background-color: var(--color-light-green-hover);
 	color: var(--color-dark-text);
 }
 
-#updateProfile:hover, #updateRestaurant:hover {
+#updateProfile:hover, #updateRestaurant:hover, #userLogin:hover {
 	background-color: var(--color-light-blue);
 	color: var(--color-dark-text);
 }
@@ -74,8 +74,7 @@
  * </p>
  */
 .modal-backdrop.show {
-	backdrop-filter: blur(8px);
-	background-color: var(--color-background);
+	backdrop-filter: blur(12px);
 }
 
 /**

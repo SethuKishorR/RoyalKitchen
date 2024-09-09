@@ -159,11 +159,27 @@ if (admin != null) {
 							<li class="dropdown-item" id="menuDetails" data-bs-toggle="modal"
 								data-bs-target="#menuDetailsModal">Update Menu</li>
 						</ul></li>
+					<li class="nav-item"><a class="nav-link" href="#"
+						onclick="submitPostForm('<%=restaurant != null ? restaurant.getRestaurantid() : ""%>')">Orders</a>
+					</li>
 				</ul>
 			</div>
 		</div>
 	</nav>
+	<form id="postForm" action="adminOrderTable" method="post"
+		style="display: none;">
+		<input type="hidden" name="restaurantid" id="restaurantid">
+	</form>
 
+	<script>
+    function submitPostForm(restaurantId) {
+        // Set the value of the hidden input
+        document.getElementById('restaurantid').value = restaurantId;
+
+        // Submit the form
+        document.getElementById('postForm').submit();
+    }
+</script>
 	<!--
     Add Menu Modal
     ----------------
@@ -219,7 +235,7 @@ if (admin != null) {
 								<tr>
 									<td>Price</td>
 									<td><input type="number" id="price" name="price"
-										class="form-control" placeholder="Enter price" step="10"
+										class="form-control" placeholder="Enter price" step="1"
 										required
 										style="border: 1px solid lightgray; background-color: transparent;"></td>
 								</tr>
@@ -244,10 +260,11 @@ if (admin != null) {
 								<!-- Image Path -->
 								<tr>
 									<td>Image Path</td>
-									<td><input type="text" id="imagepath" name="imagepath"
+									<td><input type="file" id="imagepath" name="imagepath"
 										class="form-control" placeholder="Enter image path"
 										style="border: 1px solid lightgray; background-color: transparent;"></td>
 								</tr>
+
 							</tbody>
 						</table>
 						<button type="submit" class="btn btn-success">
@@ -264,7 +281,7 @@ if (admin != null) {
 	</div>
 
 	<!--
-    Menu Details Modal
+    Update Menu Details Modal
     ------------------
     This modal displays the details of all menu items for the current restaurant. 
     It includes a table showing menu items with options to edit or delete.
@@ -290,7 +307,10 @@ if (admin != null) {
 						onmouseover="this.style.backgroundColor='lightcoral';"
 						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
-				<div class="modal-body">
+				<div class="modal-body custom-scroll">
+					<p>
+						Restaurant Id:
+						<%=admin.getRestaurantid_fk()%></p>
 					<%
 					if (menuList != null && !menuList.isEmpty()) {
 						int restaurantMenuId = 1;
@@ -298,9 +318,7 @@ if (admin != null) {
 					%>
 					<table class="table table-striped table-responsive">
 						<thead>
-							<tr>
-								<td colspan="9">Restaurant Id: <%=admin.getRestaurantid_fk()%></td>
-							</tr>
+
 							<tr>
 								<th>ID</th>
 								<th>Name</th>
@@ -346,11 +364,13 @@ if (admin != null) {
 											<%="Not Available".equals(menu.getIsavailable()) ? "selected" : ""%>>Not
 											Available</option>
 								</select></td>
-								<td class="p-md-2" style="width: 10%;"><input type="text"
-									value="<%=menu.getImagepath()%>"
+								<td class="p-md-2" style="width: 10%;"><input type="file"
 									class="form-control input field-editable"
 									id="imagePath<%=restaurantMenuId%>"
-									style="border: solid 1px lightgray !important;" disabled /></td>
+									style="border: solid 1px lightgray !important; outline: transparent !important; background-color: transparent; display: none;"
+									disabled /> <label for="imagePath<%=restaurantMenuId%>"
+									class="btn btn-secondary field-editable"
+									style="border-radius: 4px; cursor: pointer;">Choose</label></td>
 								<td class="p-md-2"
 									style="text-align: center; vertical-align: middle;">
 									<button type="button"
@@ -555,7 +575,7 @@ if (admin != null) {
 										<div class="input-group-append" style="border-radius: 10px;">
 											<span class="input-group-text" id="toggle-profile-admin-key"
 												data-toggle="password" data-target="profileAdminKey"
-												style="height: 38px; line-height: 38px; background-color: white;">
+												style="height: 38px; line-height: 38px; background-color: white; cursor: pointer;">
 												<i class="fas fa-eye" id="profileAdminKeyEye"></i>
 											</span>
 										</div>
@@ -573,7 +593,7 @@ if (admin != null) {
 										<div class="input-group-append" style="border-radius: 10px;">
 											<span class="input-group-text" id="toggle-profile-password"
 												data-toggle="password" data-target="profilePassword"
-												style="height: 38px; line-height: 38px; background-color: white;">
+												style="height: 38px; line-height: 38px; background-color: white; cursor: pointer;">
 												<i class="fas fa-eye" id="profilePasswordEye"></i>
 											</span>
 										</div>
@@ -699,7 +719,7 @@ if (admin != null) {
 											<div class="input-group-append" style="border-radius: 10px;">
 												<span class="input-group-text" id="toggle-admin-key-field"
 													data-toggle="password" data-target="adminKeyField"
-													style="height: 38px; line-height: 38px; background-color: white;">
+													style="height: 38px; line-height: 38px; background-color: white; cursor: pointer;">
 													<i class="fas fa-eye" id="adminKeyEye"></i>
 												</span>
 											</div>
@@ -724,7 +744,7 @@ if (admin != null) {
 											<div class="input-group-append" style="border-radius: 10px;">
 												<span class="input-group-text" id="toggle-password-field"
 													data-toggle="password" data-target="passwordField"
-													style="height: 38px; line-height: 38px; background-color: white;">
+													style="height: 38px; line-height: 38px; background-color: white; cursor: pointer;">
 													<i class="fas fa-eye" id="passwordEye"></i>
 												</span>
 											</div>
@@ -826,8 +846,9 @@ if (admin != null) {
 									value="<%=admin != null ? admin.getAdminkey() : ""%>" readonly>
 								<div class="input-group-append">
 									<span class="input-group-text" id="toggle-admin-key"
-										data-toggle="password" data-target="adminKey"> <i
-										class="fas fa-eye" id="adminKeyEye"></i>
+										data-toggle="password" data-target="adminKey"
+										style="cursor: pointer;"> <i class="fas fa-eye"
+										id="adminKeyEye"></i>
 									</span>
 								</div>
 							</div>
@@ -840,8 +861,8 @@ if (admin != null) {
 									style="border: solid 1px lightgray;">
 								<div class="input-group-append">
 									<span class="input-group-text" id="toggle-password"
-										data-toggle="password" data-target="password"> <i
-										class="fas fa-eye"></i>
+										data-toggle="password" data-target="password"
+										style="cursor: pointer;"> <i class="fas fa-eye"></i>
 									</span>
 								</div>
 							</div>
@@ -959,7 +980,8 @@ if (admin != null) {
 						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
 				<div class="modal-body custom-scroll">
-					<form action="updateRestaurantProfile" method="post">
+					<form action="updateRestaurantProfile" method="post"
+						enctype="multipart/form-data">
 						<table class="table table-striped">
 							<thead>
 								<tr>
@@ -1063,13 +1085,13 @@ if (admin != null) {
 										class="form-control field-editable" disabled
 										style="border: 1px solid lightgray;">
 											<!-- Default option for when no status is selected -->
-											<option value="" disabled
+											<option value="" disabled class="bg-light"
 												<%=restaurant == null || restaurant.getIsactive() == null ? "selected" : ""%>>Select
 												Status</option>
 											<!-- Check with "Active" and "Inactive" strings instead of 0 and 1 -->
-											<option value="Active"
+											<option value="Active" class="bg-light"
 												<%=restaurant != null && "Active".equals(restaurant.getIsactive()) ? "selected" : ""%>>Active</option>
-											<option value="Inactive"
+											<option value="Inactive" class="bg-light"
 												<%=restaurant != null && "Inactive".equals(restaurant.getIsactive()) ? "selected" : ""%>>Inactive</option>
 									</select></td>
 									<td class="text-center">
@@ -1082,11 +1104,11 @@ if (admin != null) {
 								</tr>
 								<tr>
 									<td>Image Path</td>
-									<td><input type="text" id="imagePathField"
+									<td><input type="file" id="imagePathField"
 										name="imagepath"
 										value="<%=restaurant != null ? restaurant.getImagepath() : ""%>"
 										class="form-control field-editable" disabled
-										style="border: 1px solid lightgray;"></td>
+										style="border: solid 1px lightgray !important; outline: transparent !important; background-color: transparent;"></td>
 									<td class="text-center">
 										<button type="button" id="editImagePathBtn"
 											class="btn btn-warning btn-sm"

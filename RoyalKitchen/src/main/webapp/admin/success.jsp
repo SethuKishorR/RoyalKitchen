@@ -78,7 +78,6 @@
 				<p class="text-center mt-3">
 					<%
 					String redirectUrl = (String) request.getAttribute("redirectUrl");
-					System.out.println("Redirect URL:- " + redirectUrl);
 					%>
 					<a
 						href="<%=request.getAttribute("redirectUrl") != null ? request.getAttribute("redirectUrl")

@@ -87,7 +87,7 @@ public class AdminSignUpServlet extends HttpServlet {
 			if (stepParam == null || stepParam.isEmpty()) {
 				// Handle missing parameter
 				request.setAttribute("message", "Step parameter is missing.");
-				request.getRequestDispatcher("/error.jsp").forward(request, response);
+				request.getRequestDispatcher("error.jsp").forward(request, response);
 				return;
 			}
 
@@ -143,18 +143,11 @@ public class AdminSignUpServlet extends HttpServlet {
 	private void handleStep1(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws IOException {
 		try {
 			String platformKey = request.getParameter("platformKey");
-			System.out.println("Handling Step 1");
-			System.out.println("Platform Key: " + platformKey);
 
 			if (ADMINISTRATOR_PRIVATE_KEY.equals(platformKey)) {
 				session.setAttribute("status", 1);
 				session.setAttribute("currentStep", 2);
 				session.setAttribute("platformKey", platformKey);
-
-				System.out.println("Session attributes after Step 1:");
-				System.out.println("status: " + session.getAttribute("status"));
-				System.out.println("currentStep: " + session.getAttribute("currentStep"));
-				System.out.println("platformKey: " + session.getAttribute("platformKey"));
 
 				response.sendRedirect("adminSignUp.jsp");
 			} else {
@@ -204,7 +197,7 @@ public class AdminSignUpServlet extends HttpServlet {
 			String confirmPassword = request.getParameter("confirmpassword");
 
 			String passwordPattern = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-			String adminKeyPattern = "^admin\\.[a-zA-Z0-9]+@[a-zA-Z0-9]+_[a-zA-Z0-9]+\\.com$";
+			String adminKeyPattern = "^[a-zA-Z]+(\\.[a-zA-Z]+)?@[a-zA-Z]+_[a-zA-Z]+$";
 
 			// Validate password
 			if (!password.matches(passwordPattern)) {
@@ -217,7 +210,7 @@ public class AdminSignUpServlet extends HttpServlet {
 			// Validate admin key
 			if (!adminKey.matches(adminKeyPattern)) {
 				handleClientError(request, response, 
-						"Admin key must follow the pattern: admin.adminname@restaurantname_address.com",
+						"Admin key must follow the pattern: admin.adminname@restaurantname_address",
 						"adminSignUp.jsp"); // Example redirect URL
 				return;
 			}
@@ -242,11 +235,6 @@ public class AdminSignUpServlet extends HttpServlet {
 			session.setAttribute("adminKey", adminKey);
 			session.setAttribute("password", password);
 			session.setAttribute("currentStep", 3);
-
-			System.out.println("Session attributes after Step 2:");
-			System.out.println("adminKey: " + session.getAttribute("adminKey"));
-			System.out.println("password: " + session.getAttribute("password"));
-			System.out.println("currentStep: " + session.getAttribute("currentStep"));
 
 			response.sendRedirect("adminSignUp.jsp");
 
@@ -289,10 +277,6 @@ public class AdminSignUpServlet extends HttpServlet {
 			String formToken = request.getParameter("formToken");
 			String sessionToken = (String) session.getAttribute("formToken");
 
-			System.out.println("Handling Step 3");
-			System.out.println("Form Token: " + formToken);
-			System.out.println("Session Token: " + sessionToken);
-
 			// Check if form has already been submitted
 			if (sessionToken != null && sessionToken.equals(formToken)) {
 				handleClientError(request, response, "Form already submitted. Please do not refresh.","adminSignUp.jsp");
@@ -307,11 +291,6 @@ public class AdminSignUpServlet extends HttpServlet {
 			session.setAttribute("restaurantName", restaurantName);
 			session.setAttribute("restaurantAddress", restaurantAddress);
 			session.setAttribute("currentStep", 4);
-
-			System.out.println("Session attributes after Step 3:");
-			System.out.println("restaurantName: " + session.getAttribute("restaurantName"));
-			System.out.println("restaurantAddress: " + session.getAttribute("restaurantAddress"));
-			System.out.println("currentStep: " + session.getAttribute("currentStep"));
 
 			response.sendRedirect("adminSignUp.jsp");
 
@@ -366,8 +345,6 @@ public class AdminSignUpServlet extends HttpServlet {
 			String restaurantName = (String) session.getAttribute("restaurantName");
 			String restaurantAddress = (String) session.getAttribute("restaurantAddress");
 
-			System.out.println("Handling Final Process");
-
 			// Create the restaurant without adminid_fk initially
 			Restaurant restaurant = new Restaurant(restaurantName, restaurantAddress);
 			int restaurantId = restaurantDAO.createRestaurant(con, restaurant);
@@ -378,7 +355,6 @@ public class AdminSignUpServlet extends HttpServlet {
 
 				// Create admin with restaurantId_fk
 				Admin admin = new Admin(adminKey, password);
-				System.out.println("Retrieved Restaurant ID: " + restaurantId);
 				admin.setRestaurantid_fk(restaurantId);
 				int adminResult = adminDAO.addAdmin(con, admin);
 
@@ -390,7 +366,7 @@ public class AdminSignUpServlet extends HttpServlet {
 					if (updateSuccess) {
 						con.commit();
 						request.setAttribute("message", "Admin and restaurant have been successfully created.");
-						request.setAttribute("redirectUrl", "adminRestaurant.jsp"); // URL to move forward
+						request.setAttribute("redirectUrl", "adminSignIn.jsp"); // URL to move forward
 						request.getRequestDispatcher("success.jsp").forward(request, response);
 						session.invalidate();
 					} else {
@@ -465,7 +441,6 @@ public class AdminSignUpServlet extends HttpServlet {
 			try {
 				if (con != null && !con.isClosed()) {
 					con.close();
-					System.out.println("Database connection closed.");
 				}
 			} catch (SQLException e) {
 				System.err.println("Failed to close the connection: " + e.getMessage());

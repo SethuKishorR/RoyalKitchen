@@ -26,6 +26,19 @@ public interface OrderItemDAO {
 	int addOrderItem(Orderitem orderitem) throws SQLException;
 
 	/**
+	 * Retrieves order items associated with a specific order ID.
+	 * <p>
+	 * This method executes an SQL {@code SELECT} statement with the provided order ID to retrieve {@link Orderitem} records 
+	 * associated with that order.
+	 * </p>
+	 * 
+	 * @param orderId the ID of the order whose items are to be retrieved
+	 * @return an {@link ArrayList} of {@link Orderitem} objects associated with the specified order ID
+	 * @throws SQLException if a database access error occurs
+	 */
+	ArrayList<Orderitem> getOrderItemsByOrderId(int orderId) throws SQLException;
+
+	/**
 	 * Retrieves all order items from the database.
 	 * <p>
 	 * This method executes an SQL {@code SELECT} statement to retrieve all {@link Orderitem} records and returns them as an {@link ArrayList}.
@@ -34,7 +47,7 @@ public interface OrderItemDAO {
 	 * @return an {@link ArrayList} of {@link Orderitem} objects representing all order items
 	 * @throws SQLException if a database access error occurs
 	 */
-	ArrayList<Orderitem> getAllOrderitem() throws SQLException;
+	ArrayList<Orderitem> getAllOrderItem() throws SQLException;
 
 	/**
 	 * Retrieves an order item from the database by its ID.
@@ -46,5 +59,5 @@ public interface OrderItemDAO {
 	 * @return the {@link Orderitem} object corresponding to the specified ID, or {@code null} if no order item is found
 	 * @throws SQLException if a database access error occurs
 	 */
-	Orderitem getOrderitem(int orderitemid) throws SQLException;
+	Orderitem getOrderItem(int orderid) throws SQLException;
 }

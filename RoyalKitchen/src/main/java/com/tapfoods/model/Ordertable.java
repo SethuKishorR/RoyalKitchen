@@ -1,5 +1,7 @@
 package com.tapfoods.model;
 
+import java.sql.Timestamp;
+
 /**
  * The Ordertable class represents an order entity with attributes such as order ID,
  * foreign key for restaurant ID, foreign key for user ID, total amount, status, and payment mode.
@@ -8,9 +10,13 @@ public class Ordertable {
 	private int orderid;
 	private int fk_restaurantid;
 	private int fk_userid;
+	private Timestamp orderdate;
 	private float totalamount;
 	private String status;
 	private String paymentmode;
+	private float feedIndia;
+	private float tips;
+	private float platformFee;
 
 	/**
 	 * Default constructor.
@@ -29,19 +35,27 @@ public class Ordertable {
 	 * @param orderid the order ID
 	 * @param fk_restaurantid the foreign key for restaurant ID
 	 * @param fk_userid the foreign key for user ID
+	 * @param orderdate the date and time when the order was placed
 	 * @param totalamount the total amount
 	 * @param status the status of the order
 	 * @param paymentmode the payment mode
+	 * @param feedIndia the feed for India
+	 * @param tips the tips given
+	 * @param platformFee the platform fee
 	 */
-	public Ordertable(int orderid, int fk_restaurantid, int fk_userid, float totalamount, String status,
-			String paymentmode) {
+	public Ordertable(int orderid, int fk_restaurantid, int fk_userid, Timestamp orderdate, float totalamount, String status,
+			String paymentmode, float feedIndia, float tips, float platformFee) {
 		super();
 		this.orderid = orderid;
 		this.fk_restaurantid = fk_restaurantid;
 		this.fk_userid = fk_userid;
+		this.orderdate = orderdate;
 		this.totalamount = totalamount;
 		this.status = status;
 		this.paymentmode = paymentmode;
+		this.feedIndia = feedIndia;
+		this.tips = tips;
+		this.platformFee = platformFee;
 	}
 
 	/**
@@ -56,14 +70,20 @@ public class Ordertable {
 	 * @param totalamount the total amount
 	 * @param status the status of the order
 	 * @param paymentmode the payment mode
+	 * @param feedIndia the feed for India
+	 * @param tips the tips given
+	 * @param platformFee the platform fee
 	 */
-	public Ordertable(int fk_restaurantid, int fk_userid, float totalamount, String status, String paymentmode) {
+	public Ordertable(int fk_restaurantid, int fk_userid, float totalamount, String status, String paymentmode, float feedIndia, float tips, float platformFee) {
 		super();
 		this.fk_restaurantid = fk_restaurantid;
 		this.fk_userid = fk_userid;
 		this.totalamount = totalamount;
 		this.status = status;
 		this.paymentmode = paymentmode;
+		this.feedIndia = feedIndia;
+		this.tips = tips;
+		this.platformFee = platformFee;
 	}
 
 	/**
@@ -142,6 +162,14 @@ public class Ordertable {
 	 */
 	public void setFk_userid(int fk_userid) {
 		this.fk_userid = fk_userid;
+	}
+
+	public Timestamp getOrderdate() {
+		return orderdate;
+	}
+
+	public void setOrderdate(Timestamp orderdate) {
+		this.orderdate = orderdate;
 	}
 
 	/**
@@ -223,6 +251,84 @@ public class Ordertable {
 	}
 
 	/**
+	 * Gets the feed for India.
+	 * 
+	 * <p>
+	 * This method returns the feed amount for India associated with the order.
+	 * </p>
+	 * 
+	 * @return the feed for India
+	 */
+	public float getFeedIndia() {
+		return feedIndia;
+	}
+
+	/**
+	 * Sets the feed for India.
+	 * 
+	 * <p>
+	 * This method sets the feed amount for India associated with the order.
+	 * </p>
+	 * 
+	 * @param feedIndia the feed amount to set
+	 */
+	public void setFeedIndia(int feedIndia) {
+		this.feedIndia = feedIndia;
+	}
+
+	/**
+	 * Gets the tips given.
+	 * 
+	 * <p>
+	 * This method returns the tips given with the order.
+	 * </p>
+	 * 
+	 * @return the tips given
+	 */
+	public float getTips() {
+		return tips;
+	}
+
+	/**
+	 * Sets the tips given.
+	 * 
+	 * <p>
+	 * This method sets the tips given with the order.
+	 * </p>
+	 * 
+	 * @param tips the tips to set
+	 */
+	public void setTips(int tips) {
+		this.tips = tips;
+	}
+
+	/**
+	 * Gets the platform fee.
+	 * 
+	 * <p>
+	 * This method returns the platform fee associated with the order.
+	 * </p>
+	 * 
+	 * @return the platform fee
+	 */
+	public float getPlatformFee() {
+		return platformFee;
+	}
+
+	/**
+	 * Sets the platform fee.
+	 * 
+	 * <p>
+	 * This method sets the platform fee associated with the order.
+	 * </p>
+	 * 
+	 * @param platformFee the platform fee to set
+	 */
+	public void setPlatformFee(float platformFee) {
+		this.platformFee = platformFee;
+	}
+
+	/**
 	 * Returns a string representation of the order object.
 	 * 
 	 * <p>
@@ -234,6 +340,8 @@ public class Ordertable {
 	@Override
 	public String toString() {
 		return "Ordertable [orderid=" + orderid + ", fk_restaurantid=" + fk_restaurantid + ", fk_userid=" + fk_userid
-				+ ", totalamount=" + totalamount + ", status=" + status + ", paymentmode=" + paymentmode + "]";
+				+ ", totalamount=" + totalamount + ", status=" + status + ", paymentmode=" + paymentmode
+				+ ", feedIndia=" + feedIndia + ", tips=" + tips + ", platformFee=" + platformFee + "]";
 	}
 }
+

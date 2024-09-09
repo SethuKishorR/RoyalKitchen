@@ -73,6 +73,11 @@ public class MenuInsertServlet extends HttpServlet {
 
 		// Validate and parse price input
 		float price;
+
+		if (imagePath == null || imagePath.trim().isEmpty()) {
+			imagePath = null; // Set imagePath to null if no file is selected
+		}
+
 		try {
 			price = Float.parseFloat(priceStr);
 		} catch (NumberFormatException e) {

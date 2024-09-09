@@ -27,7 +27,7 @@ import com.tapfoods.model.Restaurant;
 public class AdminSignInServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static final String ADMIN_KEY_PATTERN = "^admin\\.[a-zA-Z0-9]+@[a-zA-Z0-9]+_[a-zA-Z0-9]+\\.com$";
+	private static final String ADMIN_KEY_PATTERN = "^[a-zA-Z]+(\\.[a-zA-Z]+)?@[a-zA-Z]+_[a-zA-Z]+$";
 
 	/**
 	 * <p>Handles the HTTP POST request for admin sign-in.</p>
@@ -94,7 +94,7 @@ public class AdminSignInServlet extends HttpServlet {
 			}
 			session.setAttribute("restaurant", restaurant);
 
-			resp.sendRedirect("adminRestaurant.jsp");
+			resp.sendRedirect("AdminRestaurant");
 		}
 	}
 

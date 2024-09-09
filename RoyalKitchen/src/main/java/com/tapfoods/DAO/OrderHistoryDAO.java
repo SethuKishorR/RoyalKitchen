@@ -36,4 +36,15 @@ public interface OrderHistoryDAO {
      * @throws SQLException if a database access error occurs
      */
     OrderHistory getOrderHistory(int orderhistoryid) throws SQLException;
+
+	/**
+	 * Retrieves all order histories for a specific user from the database.
+	 * <p>This method prepares an SQL {@code SELECT} statement with the user ID and retrieves the corresponding {@link OrderHistory} records.</p>
+	 * 
+	 * @param userId the ID of the user for whom order histories are to be retrieved
+	 * @return an {@link ArrayList} of {@link OrderHistory} objects representing all order histories for the user
+	 * @throws SQLException if a database access error occurs
+	 */
+	ArrayList<OrderHistory> getOrderHistoryByUserId(int userId) throws SQLException;
+
 }

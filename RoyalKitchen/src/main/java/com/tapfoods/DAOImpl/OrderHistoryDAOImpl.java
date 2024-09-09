@@ -20,9 +20,10 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	private Statement stmt;
 	private ResultSet resultSet;
 
-	private static final String ADD_ORDER_HISTORY = "INSERT INTO `orderhistory` (`f_orderid`, `f_userid`, `orderdate`, `totalamount`, `status`) VALUES (?, ?, ?, ?, ?)";
+	private static final String ADD_ORDER_HISTORY = "INSERT INTO `orderhistory` (`f_orderid`, `f_userid`, `totalamount`, `status`) VALUES (?, ?, ?, ?)";
 	private static final String GET_ALL_ORDER_HISTORIES = "SELECT * FROM `orderhistory`";
 	private static final String GET_ON_ID = "SELECT * FROM `orderhistory` WHERE `orderhistoryid`=?";
+	private static final String GET_ORDER_HISTORY_BY_USER_ID = "SELECT * FROM `orderhistory` WHERE `f_userid`=?";
 
 	private int status = 0;
 
@@ -54,9 +55,8 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 			pstmt = con.prepareStatement(ADD_ORDER_HISTORY);
 			pstmt.setInt(1, oh.getF_orderid());
 			pstmt.setInt(2, oh.getF_userid());
-			pstmt.setDate(3, new java.sql.Date(oh.getOrderdate().getTime()));
-			pstmt.setFloat(4, oh.getTotalamount());
-			pstmt.setString(5, oh.getStatus());
+			pstmt.setFloat(3, oh.getTotalamount());
+			pstmt.setString(4, oh.getStatus());
 			status = pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -120,6 +120,31 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	}
 
 	/**
+	 * Retrieves all order histories for a specific user from the database.
+	 * <p>This method prepares an SQL {@code SELECT} statement with the user ID and retrieves the corresponding {@link OrderHistory} records.</p>
+	 * 
+	 * @param userId the ID of the user for whom order histories are to be retrieved
+	 * @return an {@link ArrayList} of {@link OrderHistory} objects representing all order histories for the user
+	 * @throws SQLException if a database access error occurs
+	 */
+	@Override
+	public ArrayList<OrderHistory> getOrderHistoryByUserId(int userId) throws SQLException {
+		ArrayList<OrderHistory> orderHistoryList = new ArrayList<>();
+		try {
+			pstmt = con.prepareStatement(GET_ORDER_HISTORY_BY_USER_ID);
+			pstmt.setInt(1, userId);
+			resultSet = pstmt.executeQuery();
+			orderHistoryList = extractOrderHistoryListFromResultSet(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Failed to retrieve order histories by user ID", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, resultSet);
+		}
+		return orderHistoryList;
+	}
+
+	/**
 	 * Extracts a list of {@link OrderHistory} objects from the provided {@link ResultSet}.
 	 * <p>This method iterates over the {@link ResultSet} and creates a list of {@link OrderHistory} objects from the data.</p>
 	 * 
@@ -135,7 +160,7 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 						resultSet.getInt("orderhistoryid"),
 						resultSet.getInt("f_orderid"),
 						resultSet.getInt("f_userid"),
-						resultSet.getDate("orderdate"),
+						resultSet.getTimestamp("orderdate"),
 						resultSet.getFloat("totalamount"),
 						resultSet.getString("status")
 						));

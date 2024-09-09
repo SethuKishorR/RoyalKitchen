@@ -23,9 +23,8 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 
 	private static final String ADD_ORDER_ITEM = "INSERT INTO `orderitem` (`orderid`, `menuid`, `quantity`, `subtotal`) VALUES (?, ?, ?, ?)";
 	private static final String GET_ALL_ORDER_ITEM = "SELECT * FROM `orderitem`";
-	private static final String GET_ON_ID = "SELECT * FROM `orderitem` WHERE `orderitemid`=?";
-
-	private int status = 0;
+	private static final String GET_ON_ID = "SELECT * FROM `orderitem` WHERE `orderid`=?";
+	private static final String GET_BY_ORDER_ID = "SELECT * FROM `orderitem` WHERE `orderid`=?";
 
 	/**
 	 * Constructs a new {@code OrderItemDAOImpl} instance and establishes a database connection.
@@ -57,14 +56,38 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 			pstmt.setInt(2, oi.getMenuid());
 			pstmt.setInt(3, oi.getQuantity());
 			pstmt.setFloat(4, oi.getSubtotal());
-			status = pstmt.executeUpdate();
+			return pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new SQLException("Failed to add order item", e);
 		} finally {
 			DBUtils.closeResources(con, null, pstmt, null);
 		}
-		return status;
+	}
+
+	/**
+	 * Retrieves all order items for a specific order ID.
+	 * <p>This method prepares an SQL {@code SELECT} statement with a specified order ID and retrieves all {@link Orderitem} records associated with that order ID.</p>
+	 * 
+	 * @param orderId the ID of the order whose items are to be retrieved
+	 * @return an {@link ArrayList} of {@link Orderitem} objects corresponding to the specified order ID
+	 * @throws SQLException if a database access error occurs
+	 */
+	public ArrayList<Orderitem> getOrderItemsByOrderId(int orderId) throws SQLException {
+		ArrayList<Orderitem> orderitemList = new ArrayList<>();
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(GET_BY_ORDER_ID);
+			pstmt.setInt(1, orderId);
+			resultSet = pstmt.executeQuery();
+			orderitemList = extractOrderitemListFromResultSet(resultSet);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Failed to retrieve order items by order ID", e);
+		} finally {
+			DBUtils.closeResources(con, pstmt, null, resultSet);
+		}
+		return orderitemList;
 	}
 
 	/**
@@ -75,7 +98,7 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 	 * @throws SQLException if a database access error occurs
 	 */
 	@Override
-	public ArrayList<Orderitem> getAllOrderitem() throws SQLException {
+	public ArrayList<Orderitem> getAllOrderItem() throws SQLException {
 		ArrayList<Orderitem> orderitemList = new ArrayList<>();
 		try {
 			con = DBUtils.myConnect();
@@ -100,11 +123,11 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 	 * @throws SQLException if a database access error occurs
 	 */
 	@Override
-	public Orderitem getOrderitem(int orderitemid) throws SQLException {
+	public Orderitem getOrderItem(int orderid) throws SQLException {
 		try {
 			con = DBUtils.myConnect();
 			pstmt = con.prepareStatement(GET_ON_ID);
-			pstmt.setInt(1, orderitemid);
+			pstmt.setInt(1, orderid);
 			resultSet = pstmt.executeQuery();
 			ArrayList<Orderitem> orderitemList = extractOrderitemListFromResultSet(resultSet);
 			if (!orderitemList.isEmpty()) {

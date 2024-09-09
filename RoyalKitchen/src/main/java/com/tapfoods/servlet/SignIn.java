@@ -103,7 +103,7 @@ public class SignIn extends HttpServlet {
 			session.setAttribute("user", user);
 			session.setAttribute("userEmail", user.getEmail()); // Store email
 
-			resp.sendRedirect("restaurant.jsp");
+			resp.sendRedirect("searchRestaurants");
 		}
 	}
 

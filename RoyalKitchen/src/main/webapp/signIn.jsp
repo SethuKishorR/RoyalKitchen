@@ -76,7 +76,7 @@
 								name="password" placeholder="Password" required>
 							<div class="input-group-append" style="border-radius: 10px;">
 								<span class="input-group-text form-control" id="toggle-password"
-									data-toggle="password" data-target="password"> <i
+									data-toggle="password" data-target="password" style="cursor: pointer;"> <i
 									class="fas fa-eye"></i>
 								</span>
 							</div>
