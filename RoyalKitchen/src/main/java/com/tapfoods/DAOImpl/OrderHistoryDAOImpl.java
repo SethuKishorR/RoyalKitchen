@@ -24,6 +24,7 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 	private static final String GET_ALL_ORDER_HISTORIES = "SELECT * FROM `orderhistory`";
 	private static final String GET_ON_ID = "SELECT * FROM `orderhistory` WHERE `orderhistoryid`=?";
 	private static final String GET_ORDER_HISTORY_BY_USER_ID = "SELECT * FROM `orderhistory` WHERE `f_userid`=?";
+	private static final String UPDATE_ORDER_STATUS = "UPDATE `orderhistory` SET `status`=? WHERE `f_orderid`=?";
 
 	private int status = 0;
 
@@ -66,6 +67,37 @@ public class OrderHistoryDAOImpl implements OrderHistoryDAO {
 		}
 		return status;
 	}
+
+	/**
+	 * Updates the status of an order in the database.
+	 * 
+	 * @param orderid the ID of the order to be updated
+	 * @param status the new status to be set
+	 * @throws SQLException if a database access error occurs
+	 */
+	@Override
+	public boolean updateOrderStatus(int orderid, String status) throws SQLException {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		boolean isUpdated = false;
+
+		try {
+			con = DBUtils.myConnect();
+			pstmt = con.prepareStatement(UPDATE_ORDER_STATUS);
+			pstmt.setString(1, status);
+			pstmt.setInt(2, orderid);
+			int rowsAffected = pstmt.executeUpdate();
+			isUpdated = rowsAffected > 0; // Return true if at least one row was affected
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new SQLException("Failed to update order status", e);
+		} finally {
+			DBUtils.closeResources(con, null, pstmt, null);
+		}
+
+		return isUpdated;
+	}
+
 
 	/**
 	 * Retrieves all order histories from the database.

@@ -100,7 +100,7 @@ public class AdminUpdateServlet extends HttpServlet {
 		if (password != null && !password.trim().isEmpty()) {
 			if (password.length() < 8 || password.length() > 25) {
 				req.setAttribute("message", "Password must be between 8 and 25 characters long.");
-				req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+				req.setAttribute("redirectUrl", "AdminRestaurant");
 				req.getRequestDispatcher("error.jsp").forward(req, resp);
 				return;
 			}
@@ -110,7 +110,7 @@ public class AdminUpdateServlet extends HttpServlet {
 			Matcher matcher = pattern.matcher(password);
 			if (!matcher.matches()) {
 				req.setAttribute("message", "Password must include at least one lowercase letter, one uppercase letter, one digit, and one special character (@$!%*?&).");
-				req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+				req.setAttribute("redirectUrl", "AdminRestaurant");
 				req.getRequestDispatcher("error.jsp").forward(req, resp);
 				return;
 			}
@@ -130,12 +130,12 @@ public class AdminUpdateServlet extends HttpServlet {
 		 */
 		if (status == 0) {
 			req.setAttribute("message", "Admin update failed. Please try again.");
-			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			req.setAttribute("redirectUrl", "AdminRestaurant");
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 		} else {
 			session.setAttribute("admin", currentAdmin);
 			req.setAttribute("message", "Profile updated successfully.");
-			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			req.setAttribute("redirectUrl", "AdminRestaurant");
 			req.getRequestDispatcher("success.jsp").forward(req, resp);
 		}
 	}

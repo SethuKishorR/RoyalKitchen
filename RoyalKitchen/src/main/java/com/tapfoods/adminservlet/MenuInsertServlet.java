@@ -48,7 +48,7 @@ public class MenuInsertServlet extends HttpServlet {
 		int restaurantId;
 
 		// Define the default redirect URL and message
-		String redirectUrl = "adminRestaurant.jsp";
+		String redirectUrl = "AdminRestaurant";
 		String message;
 
 		// Validate and parse restaurant ID
@@ -126,7 +126,7 @@ public class MenuInsertServlet extends HttpServlet {
 		// Check the result of the insertion operation and forward accordingly
 		if (result > 0) {
 			message = "Menu item added successfully.";
-			redirectUrl = "adminRestaurant.jsp";
+			redirectUrl = "AdminRestaurant";
 			req.setAttribute("message", message);
 			req.setAttribute("redirectUrl", redirectUrl);
 			req.getRequestDispatcher("success.jsp").forward(req, resp);

@@ -1,15 +1,18 @@
 package com.tapfoods.adminservlet;
 
-import com.tapfoods.DAO.OrderTableDAO;
-import com.tapfoods.DAOImpl.OrderTableDAOImpl;
+import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
+
+import com.tapfoods.DAO.OrderHistoryDAO;
+import com.tapfoods.DAO.OrderTableDAO;
+import com.tapfoods.DAOImpl.OrderHistoryDAOImpl;
+import com.tapfoods.DAOImpl.OrderTableDAOImpl;
 
 /**
  * Servlet to update the status of an order.
@@ -41,9 +44,11 @@ public class UpdateOrderStatusServlet extends HttpServlet {
 
 		try {
 			OrderTableDAO orderTableDAO = new OrderTableDAOImpl();
-			boolean isUpdated = orderTableDAO.updateOrderStatus(orderId, status);
+			OrderHistoryDAO orderHistoryDAO = new OrderHistoryDAOImpl();
+			boolean isTableUpdated = orderTableDAO.updateOrderStatus(orderId, status);
+			boolean isHistoryUpdated = orderHistoryDAO.updateOrderStatus(orderId, status);
 
-			if (isUpdated) {
+			if (isTableUpdated && isHistoryUpdated) {
 				// Forward to adminReceiptServlet with success message
 				request.setAttribute("orderid", orderId);
 				request.setAttribute("message", "Order status updated successfully.");

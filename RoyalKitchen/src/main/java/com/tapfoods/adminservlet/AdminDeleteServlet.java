@@ -70,7 +70,7 @@ public class AdminDeleteServlet extends HttpServlet {
 
         if (!storedPassword.equals(enteredPassword)) {
             request.setAttribute("message", "Incorrect password. Cannot delete admin profile.");
-            request.setAttribute("redirectUrl", "adminRestaurant.jsp"); // Redirect to profile page or retry
+            request.setAttribute("redirectUrl", "AdminRestaurant"); // Redirect to profile page or retry
             request.getRequestDispatcher("error.jsp").forward(request, response);
             return;
         }
@@ -97,7 +97,7 @@ public class AdminDeleteServlet extends HttpServlet {
                 if (restaurantResult <= 0) {
                     con.rollback(); // Rollback if restaurant deletion fails
                     request.setAttribute("message", "Failed to delete associated restaurant.");
-                    request.setAttribute("redirectUrl", "adminRestaurant.jsp"); // Redirect to profile page or retry
+                    request.setAttribute("redirectUrl", "AdminRestaurant"); // Redirect to profile page or retry
                     request.getRequestDispatcher("error.jsp").forward(request, response);
                     return;
                 }
@@ -114,7 +114,7 @@ public class AdminDeleteServlet extends HttpServlet {
             } else {
                 con.rollback(); // Rollback transaction if deletion fails
                 request.setAttribute("message", "Failed to delete admin.");
-                request.setAttribute("redirectUrl", "adminRestaurant.jsp"); // Redirect to profile page or retry
+                request.setAttribute("redirectUrl", "AdminRestaurant"); // Redirect to profile page or retry
                 request.getRequestDispatcher("error.jsp").forward(request, response);
             }
         } catch (SQLException e) {
@@ -127,7 +127,7 @@ public class AdminDeleteServlet extends HttpServlet {
             }
             e.printStackTrace();
             request.setAttribute("message", "An error occurred while deleting admin and restaurant.");
-            request.setAttribute("redirectUrl", "adminRestaurant.jsp"); // Redirect to profile page or retry
+            request.setAttribute("redirectUrl", "AdminRestaurant"); // Redirect to profile page or retry
             request.getRequestDispatcher("error.jsp").forward(request, response);
         } finally {
             if (con != null) {

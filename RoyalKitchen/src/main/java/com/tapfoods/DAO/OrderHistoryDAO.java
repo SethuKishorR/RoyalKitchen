@@ -47,4 +47,13 @@ public interface OrderHistoryDAO {
 	 */
 	ArrayList<OrderHistory> getOrderHistoryByUserId(int userId) throws SQLException;
 
+	/**
+	 * Updates the status of an order in the database.
+	 * 
+	 * @param orderId the ID of the order to be updated
+	 * @param status the new status to be set
+	 * @return {@code true} if the update was successful, {@code false} otherwise
+	 * @throws SQLException if a database access error occurs
+	 */
+	boolean updateOrderStatus(int orderid, String status) throws SQLException;
 }

@@ -78,7 +78,7 @@ public class MenuDeleteServlet extends HttpServlet {
 		 */
 		if (adminPassword == null || !adminPassword.equals(admin.getPassword())) {
 			request.setAttribute("message", "Authentication failed. Invalid admin password.");
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 			return;
 		}
@@ -97,17 +97,17 @@ public class MenuDeleteServlet extends HttpServlet {
 
 			if (status == 0) {
 				request.setAttribute("message", "Menu deletion failed.");
-				request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+				request.setAttribute("redirectUrl", "AdminRestaurant");
 				request.getRequestDispatcher("error.jsp").forward(request, response);
 			} else {
 				request.setAttribute("message", "Menu deleted successfully.");
-				request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+				request.setAttribute("redirectUrl", "AdminRestaurant");
 				request.getRequestDispatcher("success.jsp").forward(request, response);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			request.setAttribute("message", "Error deleting menu item: " + e.getMessage());
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 		}
 	}

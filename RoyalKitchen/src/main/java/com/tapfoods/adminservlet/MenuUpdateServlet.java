@@ -89,14 +89,14 @@ public class MenuUpdateServlet extends HttpServlet {
 			}
 		} catch (NumberFormatException | SQLException e) {
 			request.setAttribute("message", "Invalid menu ID.");
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 			return;
 		}
 
 		if (currentMenu == null) {
 			request.setAttribute("message", "Menu item not found. Please try again.");
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 			return;
 		}
@@ -116,7 +116,7 @@ public class MenuUpdateServlet extends HttpServlet {
 				currentMenu.setPrice(Float.parseFloat(priceStr));
 			} catch (NumberFormatException e) {
 				request.setAttribute("message", "Invalid price format.");
-				request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+				request.setAttribute("redirectUrl", "AdminRestaurant");
 				request.getRequestDispatcher("error.jsp").forward(request, response);
 				return;
 			}
@@ -137,7 +137,7 @@ public class MenuUpdateServlet extends HttpServlet {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			request.setAttribute("message", "Failed to update menu item. Please try again.");
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 			return;
 		}
@@ -151,12 +151,12 @@ public class MenuUpdateServlet extends HttpServlet {
 		 */
 		if (status == 0) {
 			request.setAttribute("message", "Menu item update failed. Please try again.");
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("error.jsp").forward(request, response);
 		} else {
 			session.setAttribute("menu", currentMenu);
 			request.setAttribute("message", "Menu item updated successfully.");
-			request.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			request.setAttribute("redirectUrl", "AdminRestaurant");
 			request.getRequestDispatcher("success.jsp").forward(request, response);
 		}
 	}

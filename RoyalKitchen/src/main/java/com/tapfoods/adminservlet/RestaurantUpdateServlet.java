@@ -72,7 +72,7 @@ public class RestaurantUpdateServlet extends HttpServlet {
 
 		if (currentRestaurant == null) {
 			req.setAttribute("message", "Restaurant not found. Please try again.");
-			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			req.setAttribute("redirectUrl", "AdminRestaurant");
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 			return;
 		}
@@ -89,7 +89,7 @@ public class RestaurantUpdateServlet extends HttpServlet {
 		Part filePart = req.getPart("imagepath"); // The name "imagepath" should match the input name in your form
 		//        if (filePart == null) {
 		//            req.setAttribute("message", "No file uploaded. Please try again.");
-		//            req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+		//            req.setAttribute("redirectUrl", "AdminRestaurant");
 		//            req.getRequestDispatcher("error.jsp").forward(req, resp);
 		//            return;
 		//        }
@@ -132,12 +132,12 @@ public class RestaurantUpdateServlet extends HttpServlet {
 
 		if (status == 0) {
 			req.setAttribute("message", "Restaurant update failed. Please try again.");
-			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			req.setAttribute("redirectUrl", "AdminRestaurant");
 			req.getRequestDispatcher("error.jsp").forward(req, resp);
 		} else {
 			session.setAttribute("restaurant", currentRestaurant);
 			req.setAttribute("message", "Restaurant profile updated successfully.");
-			req.setAttribute("redirectUrl", "adminRestaurant.jsp");
+			req.setAttribute("redirectUrl", "AdminRestaurant");
 			req.getRequestDispatcher("success.jsp").forward(req, resp);
 		}
 	}
