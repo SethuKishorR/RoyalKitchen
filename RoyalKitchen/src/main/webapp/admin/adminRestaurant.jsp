@@ -77,7 +77,7 @@ html, body {
 								class="badge bg-danger text-light position-absolute d-flex top-0 start-0 m-2 <%=labelClass%>"
 								style="font-size: 0.875rem;">Not Available</div>
 							<img
-								src="<%=item.getImagepath() != null ? item.getImagepath() : "styles/images/defaultImg.png"%>"
+								src="styles/images/<%=item.getImagepath() != null ? item.getImagepath() : "defaultImg.png"%>"
 								class="card-img-top" alt="<%=item.getMenuname()%>"
 								style="min-height: 150px; height: 150px; object-fit: cover; width: 100%;">
 							<div class="card-body d-flex flex-column"

@@ -35,7 +35,7 @@ User user = (User) session.getAttribute("user");
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
+<link rel="icon" href="admin/styles/images/favicon.png" type="image/png">
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
 	rel="stylesheet">
@@ -105,7 +105,7 @@ and form-specific styles.</p>
     -->
 	<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
 		<div class="container">
-			<a class="navbar-brand ms-4 ms-md-0" href="#"> <img
+			<a class="navbar-brand ms-4 ms-md-0" href="index.jsp"> <img
 				src="admin/styles/images/logo.png" alt="" width="30" height="28"
 				class="d-inline-block align-text-top"> RoyalKitchen
 			</a>
@@ -124,7 +124,7 @@ and form-specific styles.</p>
 							Search </a>
 						<ul class="dropdown-menu dropdown-menu-center mt-lg-4"
 							aria-labelledby="navbarDropdown">
-							<li>
+							<li style="border: solid 1px red;">
 								<form class="d-flex p-2" action="globalSearch" method="post"
 									id="searchForm">
 									<input class="form-control me-2" type="search" name="query"
@@ -135,20 +135,21 @@ and form-specific styles.</p>
 									</button>
 								</form>
 							</li>
-							<li class="mt-1">
-								<div class="d-flex flex-wrap justify-content-center mb-3">
-									<button class="btn filter-tag me-2 mb-2"
-										onclick="setSearchValue('biryani')" style="border-radius: 2px !important;">Biryani</button>
-									<button class="btn filter-tag me-2 mb-2"
-										onclick="setSearchValue('ice cream')" style="border-radius: 2px !important;">Ice Cream</button>
-									<button class="btn filter-tag me-2 mb-2"
-										onclick="setSearchValue('spice')" style="border-radius: 2px !important;">Spice</button>
-									<button class="btn filter-tag me-2 mb-2"
-										onclick="setSearchValue('meat')" style="border-radius: 2px !important;">Meat</button>
-									<button class="btn filter-tag me-2 mb-2"
-										onclick="setSearchValue('sweet')" style="border-radius: 2px !important;">Sweet</button>
-									<button class="btn filter-tag me-2 mb-2"
-										onclick="setSearchValue('chicken')" style="border-radius: 2px !important;">Chicken</button>
+							<li class="mt-1" style="border: solid 1px red;">
+								<div class="p-3 d-flex flex-wrap justify-content-center">
+									<button class="btn flex-grow-1 search me-2 mb-2"
+										onclick="setSearchValue('sweet')">Sweet</button>
+									<button class="btn flex-grow-1 search me-2 mb-2"
+										onclick="setSearchValue('ice cream')">Ice Cream</button>
+									<button class="btn flex-grow-1 search mb-2"
+										onclick="setSearchValue('spice')">Spice</button>
+									<button class="btn flex-grow-1 search me-2 mb-2"
+										onclick="setSearchValue('biryani')">Biryani</button>
+									<button class="btn flex-grow-1 search me-2 mb-2"
+										onclick="setSearchValue('meat')">Meat</button>
+									<button class="btn flex-grow-1 search mb-2"
+										onclick="setSearchValue('chicken')">Chicken</button>
+
 								</div>
 							</li>
 						</ul></li>
@@ -190,7 +191,8 @@ and form-specific styles.</p>
 					<%
 					}
 					%>
-					<li class="nav-item"><a class="nav-link" href="searchRestaurants">Home</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="searchRestaurants">Home</a></li>
 					<li class="nav-item"><a class="nav-link" href="help.jsp">Help</a></li>
 					<li class="nav-item"><a class="nav-link" href="OrderHistory">History</a></li>
 					<li class="nav-item"><a class="nav-link" href="cart.jsp">Cart</a></li>

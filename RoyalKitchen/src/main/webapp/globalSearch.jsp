@@ -69,7 +69,7 @@
 									class="badge bg-danger text-light position-absolute d-flex top-0 start-0 m-2 <%=labelClass%>"
 									style="font-size: 0.875rem;">Not Available</div>
 								<img
-									src="<%=r.getImagepath() != null ? r.getImagepath() : "admin/styles/images/defaultImg.png"%>"
+									src="admin/styles/images/<%=r.getImagepath() != null ? r.getImagepath() : "defaultImg.png"%>"
 									class="card-img-top" alt="<%=r.getRestaurantname()%>"
 									style="min-height: 150px; height: 150px; object-fit: cover; width: 100%;">
 								<div class="card-body d-flex flex-column"
@@ -135,7 +135,7 @@
 										class="badge bg-danger text-light position-absolute d-flex top-0 start-0 m-2 <%=labelClass%>"
 										style="font-size: 0.875rem;">Not Available</div>
 									<img
-										src="<%=menu.getImagepath() != null ? menu.getImagepath() : "admin/styles/images/defaultImg.png"%>"
+										src="admin/styles/images/<%=menu.getImagepath() != null ? menu.getImagepath() : "defaultImg.png"%>"
 										class="card-img-top" alt="<%=menu.getMenuname()%>"
 										style="min-height: 150px; height: 150px; object-fit: cover; width: 100%;">
 									<div class="card-body d-flex flex-column"
@@ -201,7 +201,6 @@
 			</div>
 		</div>
 	</a>
-	</div>
 	<%
 	}
 	%>

@@ -136,13 +136,15 @@ public class MenuSearchDAOImpl implements MenuSearchDAO {
 	@Override
 	public List<Menu> globalSearch(String query) throws SQLException {
 		List<Menu> menus = new ArrayList<>();
-		String sql = "SELECT * FROM menu WHERE menuname LIKE ? OR description LIKE ? OR price LIKE ?";
+		String sql = "SELECT * FROM `menu` WHERE `menuname` LIKE ? OR `description` LIKE ? OR `price` LIKE ? OR `isavailable` LIKE ?";
 
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
 			String searchQuery = "%" + query.toLowerCase() + "%";
+			String availability = query.toLowerCase();
 			stmt.setString(1, searchQuery);
 			stmt.setString(2, searchQuery);
 			stmt.setString(3, searchQuery);
+			stmt.setString(4, availability);
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				while (rs.next()) {

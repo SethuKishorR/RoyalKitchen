@@ -52,9 +52,7 @@ if (admin != null) {
 	    <p>Set the title of the page, incorporating the restaurant name if available.</p>
 	    <p>The title helps in identifying the page and improves user experience by reflecting the current restaurant name.</p>
 	 -->
-<title><%=(restaurant != null && restaurant.getRestaurantname() != null && restaurant.getRestaurantname().length() > 0)
-		? restaurant.getRestaurantname() + " - "
-		: ""%> Admin Profile</title>
+<title><%=(restaurant != null && restaurant.getRestaurantname() != null && restaurant.getRestaurantname().length() > 0)? restaurant.getRestaurantname() + " - ": ""%> Admin Profile</title>
 <link rel="icon" href="styles/images/favicon.png" type="image/png">
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
@@ -93,9 +91,7 @@ if (admin != null) {
 		<div class="container-fluid">
 			<a class="navbar-brand ms-4" href="#"> <img
 				src="styles/images/logo.png" alt="" width="30" height="28"
-				class="d-inline-block align-text-top"> <%=(restaurant != null && restaurant.getRestaurantname() != null && restaurant.getRestaurantname().length() > 0)
-		? restaurant.getRestaurantname()
-		: "RoyalKitchen"%>
+				class="d-inline-block align-text-top"> <%=(restaurant != null && restaurant.getRestaurantname() != null && restaurant.getRestaurantname().length() > 0)? restaurant.getRestaurantname(): "RoyalKitchen"%>
 			</a>
 			<button class="navbar-toggler" type="button"
 				data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -206,7 +202,8 @@ if (admin != null) {
 						onmouseout="this.style.backgroundColor='transparent';"></button>
 				</div>
 				<div class="modal-body custom-scroll">
-					<form action="AddMenuServlet" method="post">
+					<form action="AddMenuServlet" method="post"
+						enctype="multipart/form-data">
 						<table class="table table-striped">
 							<thead>
 								<tr>
@@ -316,110 +313,96 @@ if (admin != null) {
 						int restaurantMenuId = 1;
 						for (Menu menu : menuList) {
 					%>
-					<table class="table table-striped table-responsive">
-						<thead>
+					<form action="updateMenu" method="post"
+						enctype="multipart/form-data">
+						<table class="table table-striped table-responsive">
+							<thead>
 
-							<tr>
-								<th>ID</th>
-								<th>Name</th>
-								<th>Price</th>
-								<th>Description</th>
-								<th>Availability</th>
-								<th>ImagePath</th>
-								<th class="text-center" colspan="3">Edit Menu</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr id="menuRow<%=restaurantMenuId%>">
-								<td style="display: none;"><%=menu.getMenuid()%></td>
-								<td class="p-md-2" style="width: 10%;"><input type="number"
-									value="<%=restaurantMenuId%>"
-									class="form-control input field-editable" readonly
-									id="menuId<%=restaurantMenuId%>"
-									style="border: solid 1px lightgray !important; background-color: transparent !important;"
-									disabled /></td>
-								<td class="p-md-2" style="width: 20%;"><input type="text"
-									value="<%=menu.getMenuname()%>"
-									class="form-control input field-editable"
-									id="menuName<%=restaurantMenuId%>"
-									style="border: solid 1px lightgray !important;" disabled /></td>
-								<td class="p-md-2" style="width: 10%;"><input type="text"
-									value="<%=menu.getPrice()%>"
-									class="form-control input field-editable"
-									id="menuPrice<%=restaurantMenuId%>"
-									style="border: solid 1px lightgray !important;" disabled /></td>
-								<td class="p-md-2" style="width: 30%;"><input type="text"
-									value="<%=menu.getDescription()%>"
-									class="form-control input field-editable"
-									id="menuDescription<%=restaurantMenuId%>"
-									style="border: solid 1px lightgray !important;" disabled /></td>
-								<td class="p-md-2" style="width: 10%;"><select
-									class="form-control input field-editable"
-									id="menuAvailability<%=restaurantMenuId%>"
-									name="menuAvailability"
-									style="border: solid 1px lightgray !important;" disabled>
-										<option value="Available" style="background-color: white;"
-											<%="Available".equals(menu.getIsavailable()) ? "selected" : ""%>>Available</option>
-										<option value="Not Available" style="background-color: white;"
-											<%="Not Available".equals(menu.getIsavailable()) ? "selected" : ""%>>Not
-											Available</option>
-								</select></td>
-								<td class="p-md-2" style="width: 10%;"><input type="file"
-									class="form-control input field-editable"
-									id="imagePath<%=restaurantMenuId%>"
-									style="border: solid 1px lightgray !important; outline: transparent !important; background-color: transparent; display: none;"
-									disabled /> <label for="imagePath<%=restaurantMenuId%>"
-									class="btn btn-secondary field-editable"
-									style="border-radius: 4px; cursor: pointer;">Choose</label></td>
-								<td class="p-md-2"
-									style="text-align: center; vertical-align: middle;">
-									<button type="button"
-										class="btn btn-warning btn-sm edit-button"
-										id="editButton<%=restaurantMenuId%>"
-										style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;"
-										onclick="enableEditing(<%=restaurantMenuId%>)">
-										<i class="fas fa-pencil-alt"></i>
-									</button>
-								</td>
-
-								<td style="text-align: center; vertical-align: middle;">
-									<form action="updateMenu" method="post"
-										style="display: inline;">
-										<input type="hidden" name="menuid"
-											value="<%=menu.getMenuid()%>"> <input type="hidden"
-											name="restaurantid" value="<%=admin.getRestaurantid_fk()%>">
-										<input type="hidden" name="menuName"
-											id="menuNameInput<%=restaurantMenuId%>"
-											value="<%=menu.getMenuname()%>"> <input type="hidden"
-											name="menuPrice" id="menuPriceInput<%=restaurantMenuId%>"
-											value="<%=menu.getPrice()%>"> <input type="hidden"
-											name="menuDescription"
-											id="menuDescriptionInput<%=restaurantMenuId%>"
-											value="<%=menu.getDescription()%>"> <input
-											type="hidden" name="menuAvailability"
-											id="menuAvailabilityInput<%=restaurantMenuId%>"
-											value="<%=menu.getIsavailable()%>"> <input
-											type="hidden" name="imagePath"
-											id="imagePathInput<%=restaurantMenuId%>"
-											value="<%=menu.getImagepath()%>">
+								<tr>
+									<th>ID</th>
+									<th>Name</th>
+									<th>Price</th>
+									<th>Description</th>
+									<th>Availability</th>
+									<th>ImagePath</th>
+									<th class="text-center" colspan="3">Edit Menu</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr id="menuRow<%=restaurantMenuId%>">
+									<td style="display:none"><input type="hidden" name="menuid"
+										value="<%=menu.getMenuid()%>"></td>
+									<td style="display:none"><input type="hidden" name="restaurantid"
+										value="<%=admin.getRestaurantid_fk()%>"></td>
+									<td class="p-md-2" style="width: 10%;"><input
+										type="number" value="<%=restaurantMenuId%>"
+										class="form-control input field-editable" readonly
+										id="menuId<%=restaurantMenuId%>"
+										style="border: solid 1px lightgray !important; background-color: transparent !important;"
+										disabled /></td>
+									<td class="p-md-2" style="width: 20%;"><input type="text"
+										value="<%=menu.getMenuname()%>"
+										class="form-control input field-editable" name="menuName"
+										id="menuName<%=restaurantMenuId%>"
+										style="border: solid 1px lightgray !important;" disabled /></td>
+									<td class="p-md-2" style="width: 10%;"><input type="text"
+										value="<%=menu.getPrice()%>"
+										class="form-control input field-editable" name="menuPrice"
+										id="menuPrice<%=restaurantMenuId%>"
+										style="border: solid 1px lightgray !important;" disabled /></td>
+									<td class="p-md-2" style="width: 30%;"><input type="text"
+										value="<%=menu.getDescription()%>"
+										class="form-control input field-editable"
+										name="menuDescription"
+										id="menuDescription<%=restaurantMenuId%>"
+										style="border: solid 1px lightgray !important;" disabled /></td>
+									<td class="p-md-2" style="width: 10%;"><select
+										class="form-control input field-editable"
+										id="menuAvailability<%=restaurantMenuId%>"
+										name="menuAvailability"
+										style="border: solid 1px lightgray !important;" disabled>
+											<option value="Available" style="background-color: white;"
+												<%="Available".equals(menu.getIsavailable()) ? "selected" : ""%>>Available</option>
+											<option value="Not Available"
+												style="background-color: white;"
+												<%="Not Available".equals(menu.getIsavailable()) ? "selected" : ""%>>Not
+												Available</option>
+									</select></td>
+									<td class="p-md-2" style="width: 10%;"><input type="file"
+										class="form-control input field-editable" name="imagepath"
+										id="imagepath<%=restaurantMenuId%>"
+										style="border: solid 1px lightgray !important; outline: transparent !important; background-color: transparent; display: none;"
+										disabled /> <label for="imagepath<%=restaurantMenuId%>"
+										class="btn btn-secondary field-editable"
+										style="border-radius: 4px; cursor: pointer;">Choose</label></td>
+									<td class="p-md-2"
+										style="text-align: center; vertical-align: middle;">
+										<button type="button"
+											class="btn btn-warning btn-sm edit-button"
+											id="editButton<%=restaurantMenuId%>"
+											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;"
+											onclick="enableEditing(<%=restaurantMenuId%>)">
+											<i class="fas fa-pencil-alt"></i>
+										</button>
+									</td>
+									<td style="text-align: center; vertical-align: middle;">
 										<button type="submit" class="btn btn-success btn-sm"
-											onclick="updateHiddenInputs(<%=restaurantMenuId%>);"
 											style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
 											<i class="fas fa-cloud-upload-alt"></i>
 										</button>
-									</form>
-								</td>
-								<td style="text-align: center; vertical-align: middle;"><a
-									href="#" data-bs-toggle="modal"
-									data-bs-target="#confirmDeleteMenuModal"
-									class="btn btn-danger btn-sm delete-button"
-									onclick="setModalData('<%=restaurantMenuId%>', '<%=menu.getMenuname()%>', '<%=menu.getMenuid()%>')"
-									style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
-										<i class="fas fa-trash-alt"></i>
-								</a></td>
-							</tr>
-						</tbody>
-					</table>
+									</td>
+									<td style="text-align: center; vertical-align: middle;"><a
+										href="#" data-bs-toggle="modal"
+										data-bs-target="#confirmDeleteMenuModal"
+										class="btn btn-danger btn-sm delete-button"
+										onclick="setModalData('<%=restaurantMenuId%>', '<%=menu.getMenuname()%>', '<%=menu.getMenuid()%>')"
+										style="height: 33px; width: 33px; border-radius: 4px; border: none; border-radius: 20px;">
+											<i class="fas fa-trash-alt"></i>
+									</a></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
 					<%
 					restaurantMenuId++;
 					}

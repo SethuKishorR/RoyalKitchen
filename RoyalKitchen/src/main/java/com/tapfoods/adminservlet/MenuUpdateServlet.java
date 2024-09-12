@@ -1,13 +1,17 @@
 package com.tapfoods.adminservlet;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 
 import com.tapfoods.DAO.MenuDAO;
 import com.tapfoods.DAOImpl.MenuDAOImpl;
@@ -24,6 +28,11 @@ import com.tapfoods.model.Menu;
  * </p>
  */
 @WebServlet("/admin/updateMenu")
+@MultipartConfig(
+		fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+		maxFileSize = 1024 * 1024 * 10,       // 10MB
+		maxRequestSize = 1024 * 1024 * 50     // 50MB
+		)
 public class MenuUpdateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -66,8 +75,36 @@ public class MenuUpdateServlet extends HttpServlet {
 		String priceStr = request.getParameter("menuPrice");
 		String description = request.getParameter("menuDescription");
 		String isAvailable = request.getParameter("menuAvailability");
-		String imagePath = request.getParameter("imagePath");
 
+		System.out.println("In do post method of Add Image servlet.");
+	
+		Part file = request.getPart("imagepath");
+		String imagepath = null;
+		if (file != null && file.getSize() > 0) {
+		    imagepath = file.getSubmittedFileName();  // Get the selected image file name
+		    System.out.println("Selected Image File Name : " + imagepath);
+		    
+		    // Define the upload path where the image will be stored
+		    String uploadPath = "C:\\Users\\jeeva\\git\\RoyalKitchen\\RoyalKitchen\\src\\main\\webapp\\admin\\styles\\images\\" + imagepath;
+		    System.out.println("Upload Path : " + uploadPath);
+		    
+		    try {
+		        // Write the file to the specified path
+		        FileOutputStream fos = new FileOutputStream(uploadPath);
+		        InputStream is = file.getInputStream();
+		        
+		        // Read and write the file data
+		        byte[] data = new byte[is.available()];
+		        is.read(data);
+		        fos.write(data);
+		        fos.close();
+		    } catch (Exception e) {
+		        e.printStackTrace();  // Log the exception
+		    }
+		} else {
+		    System.out.println("No image file selected.");
+		}
+		
 		int menuId;
 		MenuDAO menuDAO = null;
 		Menu currentMenu = null;
@@ -127,8 +164,8 @@ public class MenuUpdateServlet extends HttpServlet {
 		if (isAvailable != null && !isAvailable.trim().isEmpty()) {
 			currentMenu.setIsavailable(isAvailable);
 		}
-		if (imagePath != null && !imagePath.trim().isEmpty()) {
-			currentMenu.setImagepath(imagePath);
+		if (imagepath != null && !imagepath.trim().isEmpty()) {
+			currentMenu.setImagepath(imagepath);
 		}
 
 		int status = 0;

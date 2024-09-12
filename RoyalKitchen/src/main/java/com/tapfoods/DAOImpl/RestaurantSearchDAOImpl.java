@@ -134,14 +134,16 @@ public class RestaurantSearchDAOImpl implements RestaurantSearchDAO {
 	@Override
 	public List<Restaurant> globalSearch(String query) throws SQLException {
 		List<Restaurant> restaurants = new ArrayList<>();
-		String sql = "SELECT * FROM restaurant WHERE restaurantname LIKE ? OR cuisinetype LIKE ? OR address LIKE ? OR deliverytime LIKE ?";
+		String sql = "SELECT * FROM `restaurant` WHERE `restaurantname` LIKE ? OR `cuisinetype` LIKE ? OR `address` LIKE ? OR `deliverytime` LIKE ? OR `isactive` LIKE ?";
 
 		try (PreparedStatement stmt = con.prepareStatement(sql)) {
 			String searchQuery = "%" + query.toLowerCase() + "%";
+			String availability = query.toLowerCase();
 			stmt.setString(1, searchQuery);
 			stmt.setString(2, searchQuery);
 			stmt.setString(3, searchQuery);
 			stmt.setString(4, searchQuery);
+			stmt.setString(5, availability);
 
 			try (ResultSet rs = stmt.executeQuery()) {
 				while (rs.next()) {

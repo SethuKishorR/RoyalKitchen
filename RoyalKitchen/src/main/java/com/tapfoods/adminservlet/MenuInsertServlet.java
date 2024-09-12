@@ -5,11 +5,16 @@ import com.tapfoods.DAOImpl.MenuDAOImpl;
 import com.tapfoods.model.Menu;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.Part;
+
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 /**
@@ -22,6 +27,11 @@ import java.sql.SQLException;
  * </p>
  */
 @WebServlet("/admin/AddMenuServlet")
+@MultipartConfig(
+		fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
+		maxFileSize = 1024 * 1024 * 10,       // 10MB
+		maxRequestSize = 1024 * 1024 * 50     // 50MB
+		)
 public class MenuInsertServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +54,32 @@ public class MenuInsertServlet extends HttpServlet {
 		String priceStr = req.getParameter("price");
 		String description = req.getParameter("description");
 		String isAvailable = req.getParameter("isavailable");
-		String imagePath = req.getParameter("imagepath");
+
+		System.out.println("In do post method of Add Image servlet.");
+		Part file=req.getPart("imagepath");
+		
+		String imagepath = file.getSubmittedFileName();  // get selected image file name
+		System.out.println("Selected Image File Name : "+imagepath);
+		String uploadPath = "C:\\Users\\jeeva\\git\\RoyalKitchen\\RoyalKitchen\\src\\main\\webapp\\admin\\styles\\images\\"+imagepath;  // upload path where we have to upload our actual image
+		System.out.println("Upload Path : "+uploadPath);
+		
+		try
+		{
+		
+		FileOutputStream fos = new FileOutputStream(uploadPath);
+		InputStream is = file.getInputStream();
+		
+		byte[] data = new byte[is.available()];
+		is.read(data);
+		fos.write(data);
+		fos.close();
+		
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		int restaurantId;
 
 		// Define the default redirect URL and message
@@ -74,10 +109,6 @@ public class MenuInsertServlet extends HttpServlet {
 		// Validate and parse price input
 		float price;
 
-		if (imagePath == null || imagePath.trim().isEmpty()) {
-			imagePath = null; // Set imagePath to null if no file is selected
-		}
-
 		try {
 			price = Float.parseFloat(priceStr);
 		} catch (NumberFormatException e) {
@@ -95,7 +126,7 @@ public class MenuInsertServlet extends HttpServlet {
 		menu.setPrice(price);
 		menu.setDescription(description);
 		menu.setIsavailable(isAvailable);
-		menu.setImagepath(imagePath);
+		menu.setImagepath(imagepath);
 
 		// Initialize the MenuDAO object
 		MenuDAO menuDAO = null;

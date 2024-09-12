@@ -1,5 +1,6 @@
 package com.tapfoods.adminservlet;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
@@ -51,7 +52,7 @@ public class RestaurantUpdateServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession();
 		Admin sessionAdmin = (Admin) session.getAttribute("admin");
-
+		
 		if (sessionAdmin == null) {
 			req.setAttribute("message", "Admin not found. Please log in again.");
 			req.setAttribute("redirectUrl", "adminSignIn.jsp");
@@ -85,24 +86,31 @@ public class RestaurantUpdateServlet extends HttpServlet {
 		String ratingsStr = req.getParameter("ratings");
 		String isActive = req.getParameter("isactive");
 
-		// Get the uploaded file
-		Part filePart = req.getPart("imagepath"); // The name "imagepath" should match the input name in your form
-		//        if (filePart == null) {
-		//            req.setAttribute("message", "No file uploaded. Please try again.");
-		//            req.setAttribute("redirectUrl", "AdminRestaurant");
-		//            req.getRequestDispatcher("error.jsp").forward(req, resp);
-		//            return;
-		//        }
-
-		if (filePart != null) {
-			String fileName = extractFileName(filePart);
-			if (fileName != null && !fileName.isEmpty()) {
-				InputStream fileContent = filePart.getInputStream();
-				// Save the file (e.g., to the server) and set the file path
-				currentRestaurant.setImagepath(fileName);
-			}
+		System.out.println("In do post method of Add Image servlet.");
+		Part file=req.getPart("imagepath");
+		
+		String imagepath = file.getSubmittedFileName();  // get selected image file name
+		System.out.println("Selected Image File Name : "+imagepath);
+		String uploadPath = "C:\\Users\\jeeva\\git\\RoyalKitchen\\RoyalKitchen\\src\\main\\webapp\\admin\\styles\\images\\"+imagepath;  // upload path where we have to upload our actual image
+		System.out.println("Upload Path : "+uploadPath);
+		
+		try
+		{
+		
+		FileOutputStream fos = new FileOutputStream(uploadPath);
+		InputStream is = file.getInputStream();
+		
+		byte[] data = new byte[is.available()];
+		is.read(data);
+		fos.write(data);
+		fos.close();
+		
 		}
-
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 		// Update restaurant details
 		if (restaurantName != null && !restaurantName.trim().isEmpty()) {
 			currentRestaurant.setRestaurantname(restaurantName);
@@ -122,6 +130,9 @@ public class RestaurantUpdateServlet extends HttpServlet {
 		if (isActive != null && !isActive.trim().isEmpty()) {
 			currentRestaurant.setIsactive(isActive);
 		}
+		if (imagepath != null && !imagepath.trim().isEmpty()) {
+			currentRestaurant.setImagepath(imagepath);
+		}
 
 		int status = 0;
 		try {
@@ -140,21 +151,6 @@ public class RestaurantUpdateServlet extends HttpServlet {
 			req.setAttribute("redirectUrl", "AdminRestaurant");
 			req.getRequestDispatcher("success.jsp").forward(req, resp);
 		}
-	}
-	/**
-	 * Extracts the file name from the {@link Part} header.
-	 * 
-	 * @param part The {@link Part} object representing the file upload.
-	 * @return The extracted file name.
-	 */
-	private String extractFileName(Part part) {
-		String contentDisposition = part.getHeader("content-disposition");
-		for (String cd : contentDisposition.split(";")) {
-			if (cd.trim().startsWith("filename")) {
-				return cd.substring(cd.indexOf('=') + 1).trim().replace("\"", "");
-			}
-		}
-		return null;
 	}
 
 	@Override

@@ -130,7 +130,7 @@
 
 						<!-- Image at the top of the card -->
 						<img
-							src="<%=r.getImagepath() != null ? r.getImagepath() : "admin/styles/images/defaultImg.png"%>"
+							src="admin/styles/images/<%=r.getImagepath() != null ? r.getImagepath() : "defaultImg.png"%>"
 							class="card-img-top" alt="<%=r.getRestaurantname()%>"
 							style="min-height: 150px; height: 150px; object-fit: cover; width: 100%;">
 

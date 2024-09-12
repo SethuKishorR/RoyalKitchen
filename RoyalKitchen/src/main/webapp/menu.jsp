@@ -114,7 +114,7 @@ List<Menu> menuItems = (List<Menu>) session.getAttribute("menuList");
 
 							<!-- Image at the top of the card -->
 							<img
-								src="<%=item.getImagepath() != null ? item.getImagepath() : "admin/styles/images/defaultImg.png"%>"
+								src="admin/styles/images/<%=item.getImagepath() != null ? item.getImagepath() : "defaultImg.png"%>"
 								class="card-img-top" alt="<%=item.getMenuname()%>"
 								style="min-height: 150px; height: 150px; object-fit: cover; width: 100%;">
 
