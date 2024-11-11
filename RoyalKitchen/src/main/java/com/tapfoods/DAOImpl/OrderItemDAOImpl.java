@@ -21,7 +21,7 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 	private Statement stmt;
 	private ResultSet resultSet;
 
-	private static final String ADD_ORDER_ITEM = "INSERT INTO `orderitem` (`orderid`, `menuid`, `quantity`, `subtotal`) VALUES (?, ?, ?, ?)";
+	private static final String ADD_ORDER_ITEM = "INSERT INTO `orderitem` (`orderid`, `menuid`, `menuname`, `quantity`, `subtotal`) VALUES (?, ?, ?, ?, ?)";
 	private static final String GET_ALL_ORDER_ITEM = "SELECT * FROM `orderitem`";
 	private static final String GET_ON_ID = "SELECT * FROM `orderitem` WHERE `orderid`=?";
 	private static final String GET_BY_ORDER_ID = "SELECT * FROM `orderitem` WHERE `orderid`=?";
@@ -54,8 +54,9 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 			pstmt = con.prepareStatement(ADD_ORDER_ITEM);
 			pstmt.setInt(1, oi.getOrderid());
 			pstmt.setInt(2, oi.getMenuid());
-			pstmt.setInt(3, oi.getQuantity());
-			pstmt.setFloat(4, oi.getSubtotal());
+			pstmt.setString(3, oi.getMenuname());
+			pstmt.setInt(4, oi.getQuantity());
+			pstmt.setFloat(5, oi.getSubtotal());
 			return pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -158,6 +159,7 @@ public class OrderItemDAOImpl implements OrderItemDAO {
 						resultSet.getInt("orderitemid"),
 						resultSet.getInt("orderid"),
 						resultSet.getInt("menuid"),
+						resultSet.getString("menuname"),
 						resultSet.getInt("quantity"),
 						resultSet.getFloat("subtotal")
 						));

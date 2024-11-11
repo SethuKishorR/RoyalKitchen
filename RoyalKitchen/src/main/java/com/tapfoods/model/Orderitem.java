@@ -8,6 +8,7 @@ public class Orderitem {
 	private int orderitemid;
 	private int orderid;
 	private int menuid;
+	private String menuname;
 	private int quantity;
 	private float subtotal;
 
@@ -31,11 +32,12 @@ public class Orderitem {
 	 * @param quantity the quantity of the item
 	 * @param subtotal the subtotal for the item
 	 */
-	public Orderitem(int orderitemid, int orderid, int menuid, int quantity, float subtotal) {
+	public Orderitem(int orderitemid, int orderid, int menuid, String menuname, int quantity, float subtotal) {
 		super();
 		this.orderitemid = orderitemid;
 		this.orderid = orderid;
 		this.menuid = menuid;
+		this.menuname = menuname;
 		this.quantity = quantity;
 		this.subtotal = subtotal;
 	}
@@ -52,10 +54,11 @@ public class Orderitem {
 	 * @param quantity the quantity of the item
 	 * @param subtotal the subtotal for the item
 	 */
-	public Orderitem(int orderid, int menuid, int quantity, float subtotal) {
+	public Orderitem(int orderid, int menuid, String menuname, int quantity, float subtotal) {
 		super();
 		this.orderid = orderid;
 		this.menuid = menuid;
+		this.menuname = menuname;
 		this.quantity = quantity;
 		this.subtotal = subtotal;
 	}
@@ -137,6 +140,14 @@ public class Orderitem {
 	public void setMenuid(int menuid) {
 		this.menuid = menuid;
 	}
+	
+	public String getMenuname() {
+		return menuname;
+	}
+
+	public void setMenuname(String menuname) {
+		this.menuname = menuname;
+	}
 
 	/**
 	 * Gets the quantity of the item.
@@ -201,7 +212,7 @@ public class Orderitem {
 	 */
 	@Override
 	public String toString() {
-		return "Orderitem [orderitemid=" + orderitemid + ", orderid=" + orderid + ", menuid=" + menuid + ", quantity="
+		return "Orderitem [orderitemid=" + orderitemid + ", orderid=" + orderid + ", menuid=" + menuid + ", menuname=" + menuname+ ", quantity="
 				+ quantity + ", subtotal=" + subtotal + "]";
 	}
 }

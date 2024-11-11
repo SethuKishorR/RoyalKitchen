@@ -159,7 +159,7 @@ public class PlaceOrderServlet extends HttpServlet {
                         Menu menu = menus.get(i);
                         int quantity = quantities.get(i);
                         float subtotal = quantity * menu.getPrice();
-                        Orderitem orderItem = new Orderitem(orderId, menu.getMenuid(), quantity, subtotal);
+                        Orderitem orderItem = new Orderitem(orderId, menu.getMenuid(), menu.getMenuname(), quantity, subtotal);
                         try {
                             orderItemDAO.addOrderItem(orderItem);
                         } catch (Exception e) {
